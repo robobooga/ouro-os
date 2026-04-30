@@ -24,14 +24,10 @@ Phase 1: Infrastructure
   3. Update CLAUDE.md: Add instructions to the LLM agent to enforce wiki maintenance as a
     core task.
 
-Phase 2: Migration & Synthesis
-  1. Migrate ouro/docs/PRD.md → ouro/wiki/entities/product.md.
-  2. Migrate ouro/docs/ARCHITECTURE.md → ouro/wiki/entities/architecture.md (and link to Maps).
-  3. Migrate ouro/docs/EXTRACTION.md → ouro/wiki/entities/extraction.md.
-  4. Migrate ouro/docs/CHANGELOG.md → ouro/wiki/log/archive-changelog.md and start a new log format.
-  5. Synthesize ouro/docs/DESIGN.md → ouro/wiki/entities/design-system.md and
-    ouro/wiki/patterns/handy-notebook.md.
-  6. Create ouro/wiki/decisions/ADR-001-async-job-strategy.md from ouro/docs/ASYNC_JOBS.md.
+Phase 2: Foundation Seeding
+  1. Populate ouro/wiki/entities/Parser.md based on existing code patterns.
+  2. Create foundational ADRs in ouro/wiki/decisions/.
+  3. Initialize logging in ouro/wiki/log/capture-queue.md.
 
 Phase 3: Cleanup
   1. Verify all "live" knowledge is in the ouro/wiki/ directory.
