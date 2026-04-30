@@ -48,10 +48,19 @@ def build():
         for root, dirs, files in os.walk(WIKI_DIR):
             if 'dist' in dirs: dirs.remove('dist')
             if '.git' in dirs: dirs.remove('.git')
+            # Specifically ignore internal ouro directories that might be present
+            if 'scripts' in dirs: dirs.remove('scripts')
+            if 'entities' not in [os.path.basename(root)] and 'patterns' not in [os.path.basename(root)] and 'decisions' not in [os.path.basename(root)] and root != str(WIKI_DIR):
+                # This is a bit strict, let's just ignore known internal folders
+                pass
             
             for file in files:
                 if file.endswith('.md'):
                     wiki_path = Path(root) / file
+                    # Skip specific internal files we don't want to parse
+                    if wiki_path.name in ['capture-queue.md', 'schema.md']:
+                        continue
+                    
                     print(f"Processing: {wiki_path.relative_to(WIKI_DIR)}")
                     
                     try:
