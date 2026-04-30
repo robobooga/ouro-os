@@ -16,7 +16,7 @@ Ourobor OS is a portable, compounding knowledge system designed as an "External 
 ## Directory Structure
 
 ```
-ouro-os/
+ourobor-os/
 ├── docs/              # Internal working documentation for Ourobor OS development
 ├── ouro/              # The portable system (drop into any project)
 │   ├── AGENT.md       # Agent maintenance protocol instructions
@@ -29,8 +29,7 @@ ouro-os/
 │       ├── decisions/ # Architecture Decision Records (ADRs)
 │       ├── patterns/  # Reusable architectural abstractions
 │       ├── maps/      # High-level mental models
-│       └── log/
-│           └── capture-queue.md  # Staged snippets awaiting synthesis
+│       └── capture-queue.md  # Staged snippets awaiting synthesis
 ```
 
 **Important**: `docs/` is for Ourobor OS project development planning. `ouro/wiki/` is the portable wiki system that gets deployed to other projects.
@@ -69,7 +68,7 @@ The wiki uses structured Doxygen tags within Markdown for machine-readability:
 
 ## Capture → Synthesis Workflow
 
-1. **Capture**: The `capture.py` script scans files for Doxygen tags and stages them in `wiki/log/capture-queue.md`
+1. **Capture**: The `capture.py` script scans files for Doxygen tags and stages them in `wiki/capture-queue.md`
 2. **Synthesis**: Process the capture queue and transform entries into structured documentation in `wiki/entities/` or `wiki/patterns/`
 3. **Indexing**: Update `wiki/index.md` to reflect new entities
 4. **Cleanup**: Remove synthesized entries from the capture queue
@@ -81,7 +80,7 @@ The wiki uses structured Doxygen tags within Markdown for machine-readability:
 - Filters files containing `@entity` or `@brief` tags
 - Appends captures to the queue with timestamp and source metadata
 - Supports both file paths and raw snippet input
-- Queue path: `ouro/wiki/log/capture-queue.md`
+- Queue path: `ouro/wiki/capture-queue.md`
 
 ### Portability Requirements
 - All scripts must use relative paths from `ouro/` root
@@ -92,7 +91,7 @@ The wiki uses structured Doxygen tags within Markdown for machine-readability:
 
 When working on this project:
 
-1. **Monitor** `ouro/wiki/log/capture-queue.md` for new captures
+1. **Monitor** `ouro/wiki/capture-queue.md` for new captures
 2. **Synthesize** captures into appropriate `wiki/entities/` or `wiki/patterns/` files
 3. **Structure** all entity files with `@entity` and `@brief` tags at minimum
 4. **Mirror** critical code logic using `@snippet` blocks

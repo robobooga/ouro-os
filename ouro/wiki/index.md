@@ -10,5 +10,4 @@ Welcome to the Project Brain.
 - [Patterns](patterns/) - Reusable architectural logic.
 
 ## Recent Activity
-- [Session Logs](log/)
-- [Capture Queue](log/capture-queue.md)
+- [Capture Queue](capture-queue.md)

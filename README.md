@@ -30,7 +30,7 @@ The project "Brain" resides in `ouro/wiki/`:
 - **`entities/`**: 1:1 mirrored documentation of your codebase.
 - **`decisions/`**: Architecture Decision Records (ADRs).
 - **`patterns/`**: Abstracted, reusable architectural logic.
-- **`log/`**: Chronological session history and the `capture-queue.md`.
+- **`capture-queue.md`**: The active capture staging area.
 
 ## 🚀 Quick Start
 

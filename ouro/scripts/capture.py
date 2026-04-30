@@ -4,7 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 # Path to the capture queue
-QUEUE_PATH = Path(__file__).resolve().parent.parent / 'wiki' / 'log' / 'capture-queue.md'
+QUEUE_PATH = Path(__file__).resolve().parent.parent / 'wiki' / 'capture-queue.md'
 
 def is_binary(file_path):
     """Heuristic to check if a file is binary."""
