@@ -1,7 +1,7 @@
-# Gemini Agent Instructions: Portable Ouro OS & LLM Wiki Foundation
+# Gemini Agent Instructions: Portable Ourobor OS & LLM Wiki Foundation
 
 ## 1. Core Mandate: Portability
-Everything within the `ouro/` directory is designed to be **portable**. The Ouro OS is a "drop-in" system that users can integrate into any project. Ensure all paths, scripts, and documentation within the `ouro/` folder are relative and self-contained.
+Everything within the `ouro/` directory is designed to be **portable**. The Ourobor OS is a "drop-in" system that users can integrate into any project. Ensure all paths, scripts, and documentation within the `ouro/` folder are relative and self-contained.
 
 ## 2. Core Mandate: Building the LLM Wiki Foundation
 You are responsible for building and refining the **LLM Wiki Foundation** in the `ouro/wiki/` directory. This is not about content maintenance, but about establishing the architectural standards, schemas, and automation scripts (the "Brain") that make the wiki functional and portable.
@@ -12,7 +12,7 @@ You are responsible for building and refining the **LLM Wiki Foundation** in the
 - `log/`: Chronological context shifts and foundation development logs.
 - `maps/`: High-level mental models of the foundation's architecture.
 - `entities/`: Structural templates and foundational entity documentation.
-- `decisions/`: Architecture Decision Records (ADRs) for the Ouro OS.
+- `decisions/`: Architecture Decision Records (ADRs) for the Ourobor OS.
 - `patterns/`: Abstracted architectural patterns for the foundation.
 
 ## 4. Foundational Protocols
@@ -31,8 +31,8 @@ You are responsible for building and refining the **LLM Wiki Foundation** in the
 - Mirror critical code logic using `@snippet` blocks.
 - Highlight architectural notes with `@note` or `@warning`.
 
-## 6. Active Plan: Build Ouro OS Foundation
-Follow the steps to establish the portable Ouro OS core:
+## 6. Active Plan: Build Ourobor OS Foundation
+Follow the steps to establish the portable Ourobor OS core:
 1. **Foundational Infrastructure**: Finalize `ouro/wiki/schema.md` and `ouro/wiki/index.md` as standard templates.
 2. **Automation**: Refine `ouro/scripts/capture.py` to handle the synthesis of snippets into the wiki foundation.
 3. **Portability Validation**: Ensure the entire `ouro/` directory can be moved and function independently in any workspace.

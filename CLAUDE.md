@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Ouro OS is a portable, compounding knowledge system designed as an "External Brain" for LLM agents. It transforms project documentation into a structured, machine-readable wiki using Doxygen tags. The entire system lives in the `ouro/` directory and is designed to be dropped into any project.
+Ourobor OS is a portable, compounding knowledge system designed as an "External Brain" for LLM agents. It transforms project documentation into a structured, machine-readable wiki using Doxygen tags. The entire system lives in the `ouro/` directory and is designed to be dropped into any project.
 
 ## Core Philosophy
 
@@ -17,7 +17,7 @@ Ouro OS is a portable, compounding knowledge system designed as an "External Bra
 
 ```
 ouro-os/
-├── docs/              # Internal working documentation for Ouro OS development
+├── docs/              # Internal working documentation for Ourobor OS development
 ├── ouro/              # The portable system (drop into any project)
 │   ├── AGENT.md       # Agent maintenance protocol instructions
 │   ├── scripts/
@@ -33,7 +33,7 @@ ouro-os/
 │           └── capture-queue.md  # Staged snippets awaiting synthesis
 ```
 
-**Important**: `docs/` is for Ouro OS project development planning. `ouro/wiki/` is the portable wiki system that gets deployed to other projects.
+**Important**: `docs/` is for Ourobor OS project development planning. `ouro/wiki/` is the portable wiki system that gets deployed to other projects.
 
 ## Development Commands
 
@@ -53,7 +53,7 @@ python ./ouro/scripts/capture.py "snippet content"
 ```
 
 ### Integration
-To integrate Ouro OS into a project, append `ouro/AGENT.md` to the project's agent instructions (e.g., `GEMINI.md` or `CLAUDE.md`).
+To integrate Ourobor OS into a project, append `ouro/AGENT.md` to the project's agent instructions (e.g., `GEMINI.md` or `CLAUDE.md`).
 
 ## Doxygen Protocol
 
