@@ -6,7 +6,7 @@ Everything within the `ouro/` directory is designed to be **portable**. Users sh
 ## 2. Core Mandate: Wiki Maintenance
 You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki/` directory. This is the project's persistent knowledge base.
 
-### 3. Directory Structure & Taxonomy (within `ouro/wiki/`)
+## 3. Directory Structure & Taxonomy (within `ouro/wiki/`)
 - `index.md`: The central hub and catalog.
 - `schema.md`: The operating manual (Rules of the Brain).
 - `log/`: Chronological context shifts and session logs.
@@ -15,19 +15,19 @@ You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki
 - `decisions/`: Architecture Decision Records (ADRs).
 - `patterns/`: Abstracted architectural patterns.
 
-### 4. Maintenance Protocols
-#### Capture & Synthesis
+## 4. Maintenance Protocols
+### Capture & Synthesis
 - Monitor `ouro/wiki/log/capture-queue.md` for new snippets.
 - Use **Doxygen-Lite** tags (`@entity`, `@brief`, `@snippet`, `@note`, `@warning`) to structure documentation.
 - Synthesize captures into the appropriate `ouro/wiki/entities/` or `ouro/wiki/patterns/` files.
 - Maintain a 1:1 parity between code modules in the project (e.g., `src/`, `lib/`) and documentation in `ouro/wiki/entities/`.
 
-#### Verification
+### Verification
 - Every session must add value to the wiki.
 - Ensure `ouro/wiki/index.md` is updated with new entities or decisions.
 - Confirm the wiki reflects the latest code changes.
 
-### 5. Doxygen-Lite Standards
+## 5. Doxygen-Lite Standards
 - Always include an `@entity` and `@brief` tag at the top of entity files.
 - Mirror critical code logic using `@snippet` blocks.
 - Highlight architectural notes with `@note` or `@warning`.
