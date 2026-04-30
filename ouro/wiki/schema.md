@@ -20,7 +20,8 @@ This document defines the "Operating Manual" for the LLM Wiki. It uses **Doxygen
 
 ## 3. Maintenance Protocols
 - **Capture**: New code snippets are staged in `wiki/log/capture-queue.md`.
-- **Synthesis**: The LLM must periodically process the queue and update `wiki/entities/`.
+- **Synthesis**: The LLM must periodically process the queue and update `wiki/entities/`, `wiki/patterns/`, or `wiki/maps/` as appropriate.
+- **ADR**: Major architectural decisions must be recorded in `wiki/decisions/` capturing context, alternatives, trade-offs, and rationale.
 - **Parity**: Maintain a 1:1 mapping between `src/` modules and `wiki/entities/` files.
 
 ## 4. Directory Structure
