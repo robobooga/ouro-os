@@ -1,0 +1,18 @@
+{
+  "instructionFiles": [
+    "GEMINI.md",
+    "CLAUDE.md"
+  ],
+  "doxygenLite": {
+    "enabled": true,
+    "tags": [
+      "@entity",
+      "@brief",
+      "@snippet",
+      "@note",
+      "@warning",
+      "@param",
+      "@return"
+    ]
+  }
+}
