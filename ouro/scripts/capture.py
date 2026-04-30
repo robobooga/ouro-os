@@ -41,7 +41,7 @@ def stage(input_str):
         print(f'Failed to write to capture queue: {e}')
 
 def crawl(directory):
-    """Crawls a directory for files containing Doxygen-Lite tags."""
+    """Crawls a directory for files containing Doxygen tags."""
     dir_path = Path(directory)
     if not dir_path.exists() or not dir_path.is_dir():
         print(f'Error: Directory "{directory}" does not exist.')
@@ -59,7 +59,7 @@ def crawl(directory):
             except Exception as e:
                 print(f'Skipping file "{file_path}": {e}')
     
-    print(f'Crawl complete. Staged {count} files with Doxygen-Lite tags.')
+    print(f'Crawl complete. Staged {count} files with Doxygen tags.')
 
 def main():
     if len(sys.argv) < 2:

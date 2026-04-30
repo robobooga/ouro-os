@@ -18,7 +18,7 @@ You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki
 ## 4. Maintenance Protocols
 ### Capture & Synthesis
 - Monitor `ouro/wiki/log/capture-queue.md` for new snippets.
-- Use **Doxygen-Lite** tags (`@entity`, `@brief`, `@snippet`, `@note`, `@warning`) to structure documentation.
+- Use **Doxygen** tags (`@entity`, `@brief`, `@snippet`, `@note`, `@warning`) to structure documentation.
 - Synthesize captures into the appropriate `ouro/wiki/entities/` or `ouro/wiki/patterns/` files.
 - Maintain a 1:1 parity between code modules in the project (e.g., `src/`, `lib/`) and documentation in `ouro/wiki/entities/`.
 
@@ -27,7 +27,7 @@ You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki
 - Ensure `ouro/wiki/index.md` is updated with new entities or decisions.
 - Confirm the wiki reflects the latest code changes.
 
-## 5. Doxygen-Lite Standards
+## 5. Doxygen Standards
 - Always include an `@entity` and `@brief` tag at the top of entity files.
 - Mirror critical code logic using `@snippet` blocks.
 - Highlight architectural notes with `@note` or `@warning`.

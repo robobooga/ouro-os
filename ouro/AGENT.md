@@ -9,7 +9,7 @@ You are responsible for maintaining the project's **LLM Wiki** in the `wiki/` di
 - Use **Doxygen** tags (`@entity`, `@brief`, `@snippet`, etc.) to structure the documentation.
 - Once synthesized, remove the entry from the capture queue.
 
-### 2. Doxygen-Lite Standards
+### 2. Doxygen Standards
 - Always include an `@entity` and `@brief` tag at the top of entity files.
 - Mirror critical code logic using `@snippet` blocks.
 - Highlight architectural notes with `@note` or `@warning`.

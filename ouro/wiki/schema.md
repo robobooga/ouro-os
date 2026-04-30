@@ -1,13 +1,13 @@
-# Wiki Schema: Doxygen-Lite Protocol
+# Wiki Schema: Doxygen Protocol
 
 This document defines the "Operating Manual" for the LLM Wiki. It uses **Doxygen** tags to ensure a "Gold Standard" of documentation while remaining lightweight and LLM-synthesizable.
 
 ## 1. Philosophy
 - **Persistent Knowledge**: The wiki is the project's brain. If it's not in the wiki, it doesn't exist for the LLM.
 - **Compounding**: Every session should add value to the wiki.
-- **Doxygen-Lite**: Use structured tags within Markdown to allow for machine-readability and rich UI rendering.
+- **Doxygen**: Use structured tags within Markdown to allow for machine-readability and rich UI rendering.
 
-## 2. Doxygen-Lite Tags
+## 2. Doxygen Tags
 | Tag | Description |
 | --- | --- |
 | `@entity <name>` | Defines the module or entity this file documents. |
