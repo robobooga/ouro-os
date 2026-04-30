@@ -8,7 +8,7 @@ The name **Ourobor OS** is inspired by the *Ouroboros*—the ancient symbol of a
 ## 🧠 Core Philosophy
 - **Persistence**: If it's not in the wiki, it doesn't exist for the LLM.
 - **Compounding**: Every development session adds to the collective intelligence of the project.
-- **Portability**: The entire system lives in the `ouro/` directory and can be dropped into any project.
+- **Portability**: The entire Ouro Core system lives in the `ouro/` directory and can be dropped into any project.
 
 ## ⚠️ The Documentation Problem
 Documentation often falls into a "trap of obsolescence":
