@@ -48,6 +48,4 @@ python ./ouro/scripts/capture.py --crawl
 
 ## 📖 Learn More
 Navigate to the [Wiki Index](./ouro/wiki/index.md) to explore the system's full capabilities.
-
-### Inspired by [Andrej Karpathy’s "LLM Wiki"](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) concept
-
+Inspired by [Andrej Karpathy’s "LLM Wiki"](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) concept
