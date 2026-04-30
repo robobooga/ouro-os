@@ -28,9 +28,10 @@ Establish a compounding, product-agnostic "LLM Wiki" system inside the `ouro/wik
 
 ### Phase 2: Ouro-WebUI (ACTIVE)
 1. Scaffold `ouro-webui/` directory and basic structure.
-2. Implement `builder.py` to parse Doxygen tags and generate cross-linked HTML.
-3. Create responsive dashboard templates for offline viewing.
-4. Verify generation and portability of the dashboard.
+2. Develop a Python-based SSG in `builder.py` using `mistune` (Markdown parsing & Doxygen tag processing) and `jinja2` (templating).
+3. Create responsive, portable dashboard templates.
+4. Integrate custom Mistune renderer for Ourobor protocol tags (`@entity`, `@brief`, `@note`, `@warning`).
+5. Verify generation and portability of the dashboard.
 
 ## Verification
 - LLM can successfully "look up" a decision or entity in the `ouro/wiki/`.
