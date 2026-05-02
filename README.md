@@ -1,14 +1,21 @@
-# Ourobor OS: Developer-Centric LLM Wiki
+# Ourobor OS: The AI-Native Documentation Ecosystem
 
-Ourobor OS is a portable, compounding knowledge system designed to serve as an "External Brain" for LLM agents. It transforms project documentation into a structured, machine-readable wiki that grows alongside your codebase.
+Ourobor OS is a holistic, AI-native "operating system" for project documentation. It creates a compounding knowledge base designed to be perfectly readable by humans and efficiently crawlable by LLMs. By embedding the knowledge capture directly into the development workflow, Ourobor OS ensures that your project documentation remains a living, evolving part of the codebase.
 
 ## ♾️ About the Project
 The name **Ourobor OS** is inspired by the *Ouroboros*—the ancient symbol of a snake eating its own tail. This represents the cyclical, self-renewing nature of our architecture: as you develop code, the system captures knowledge, which informs future development, which in turn updates and refines the documentation. It is a system that continuously feeds on its own evolution.
 
+## 🌟 Project Plans
+While Ourobor OS currently provides an **Agent Skill** for seamless IDE integration, our vision extends far beyond a simple plugin. We are building a comprehensive ecosystem for documentation, including but not limited to:
+- **Web UI**: An intuitive interface for browsing, managing, and visualizing your project's knowledge graph.
+- **Auxiliary Tooling**: Specialized utilities for documentation maintenance, validation, and analytics.
+- **Holistic Integration**: A unified standard for AI-assisted project management where documentation is the primary interface for both developers and agents.
+
 ## 🧠 Core Philosophy
 - **Persistence**: If it's not in the wiki, it doesn't exist for the LLM.
 - **Compounding**: Every development session adds to the collective intelligence of the project.
-- **Portability**: The entire Ouro Core system lives in the `ouro/` directory and can be dropped into any project.
+- **Portability**: The entire Ouro Core system is designed to be lightweight, modular, and portable across any codebase.
+- **Dual-Readability**: Documentation must be equally elegant for humans to read and structured for LLMs to crawl and synthesize.
 
 ## ⚠️ The Documentation Problem
 Documentation often falls into a "trap of obsolescence":
@@ -37,14 +44,13 @@ The project "Brain" resides in `ouro/wiki/`:
 ### 1. Installation
 
 #### For End Users
-Download the packaged skill from the [Claude Skills Marketplace](#) or obtain a distribution zip, then install to your LLM's skills directory:
+The easiest way to install Ourobor OS is via our skills manager:
 
-- **Claude Code**: Extract to `~/.claude/skills/`
-- **Gemini CLI**: Extract to `~/.agents/skills/`
-- **Cursor**: Extract to `~/.cursor/skills/`
-- **Other LLMs**: Extract to your LLM's skills directory or project root
+```bash
+npx skills add robobooga/ourobor-os
+```
 
-The distribution auto-detects your LLM environment and adapts instructions accordingly.
+Alternatively, clone this project page and extract the `./ouro` directory to your LLM's skills directory.
 
 #### For Developers
 Clone this repository and package from source:
@@ -56,17 +62,22 @@ python scripts/package.py
 # Output: dist/ouro-skill.zip
 ```
 
-For manual integration, copy the core `ouro/` directory into your project's root.
+For manual integration, copy the core `ouro/` directory into your target project's root.
 
 ### 2. Integration
-Enable the agent by appending the maintenance protocols to your project's instructions (e.g., `GEMINI.md` or `CLAUDE.md`). The bootstrap scripts in the optimized distributions handle this automatically.
+Enable the agent by appending the maintenance protocols to your project's instructions (e.g., `GEMINI.md` or `CLAUDE.md`). See `ouro/AGENT.md` for the full protocols.
 
 ### 3. Usage
 Run the capture script to scan your project for Doxygen tags:
-```powershell
+```
 python ./ouro/scripts/capture.py --crawl
 ```
 
+Or, initialize the system in a new project:
+```
+python ./ouro/scripts/bootstrap.py
+```
+
 ## 📖 Learn More
-Navigate to the [Wiki Index](./ouro/wiki/index.md) to explore the system's full capabilities.
-Inspired by [Andrej Karpathy’s "LLM Wiki"](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) concept
+- Navigate to the [Wiki Index](./ouro/wiki/index.md) to explore the system's full capabilities.
+- Inspired by [Andrej Karpathy’s "LLM Wiki"](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) concept.

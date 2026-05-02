@@ -76,7 +76,10 @@ You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki
 - Regularly read `ouro/wiki/capture-queue.md` using your file reading tool.
 - When new snippets are found, "Synthesize" them into the appropriate `ouro/wiki/entities/`, `ouro/wiki/patterns/`, or `ouro/wiki/maps/` files.
 - Use **Doxygen** tags (`@entity`, `@brief`, `@snippet`, etc.) to structure the documentation.
-- Once synthesized, remove the entry from the capture queue.
+- Once synthesized, finalize the capture by popping it from the queue:
+  ```bash
+  python <path-to-skill>/scripts/capture.py --pop
+  ```
 
 ### 2. Doxygen Standards
 - Always include an `@entity` and `@brief` tag at the top of entity/pattern files.

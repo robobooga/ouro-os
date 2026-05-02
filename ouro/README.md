@@ -72,6 +72,9 @@ If your LLM tool doesn't have a skills directory:
 
 ### Bootstrap a New Project
 
+**What to expect:**
+The bootstrap script automates the setup of your Ourobor OS environment. It creates the necessary `ouro/wiki/` directory structure, initializes template files, and identifies your active LLM tools (e.g., Claude, Gemini, Cursor) to update your instruction files (`CLAUDE.md`, `GEMINI.md`, etc.) with the Ourobor OS maintenance protocols.
+
 Run the bootstrap script from your project directory:
 
 ```bash
@@ -83,13 +86,10 @@ python ~/.agents/skills/ouro/scripts/bootstrap.py  # Gemini
 python <your-project>/ouro/scripts/bootstrap.py
 ```
 
-This will:
-- Create the `ouro/wiki/` directory structure in your current project
-- Set up template files
-- Update your LLM instruction file (CLAUDE.md, GEMINI.md, etc.) with maintenance protocols
-- Detect your LLM environment and provide relevant tips
-
 ### Capture Code & Documentation
+
+**What to expect:**
+The capture script acts as a staging bridge. When run, it identifies your target code or notes and automatically appends them to `ouro/wiki/capture-queue.md`. It uses a safe, append-only operation that prevents loss of previous captures. Once staged, your LLM agent will notice the new entries in the queue during its next maintenance pass, synthesize the raw information into formatted documentation, and move the finalized content into the appropriate `ouro/wiki/` subdirectories.
 
 ```bash
 # Crawl entire project
@@ -103,6 +103,9 @@ python <path-to-skill>/scripts/capture.py src/main.py
 
 # Capture raw snippet or architectural note
 python <path-to-skill>/scripts/capture.py "Architectural Note: Use composition over inheritance."
+
+# Finalize/Pop the queue after synthesis
+python <path-to-skill>/scripts/capture.py --pop
 ```
 
 ### Maintain the Wiki with Your LLM
@@ -112,6 +115,7 @@ Once initialized, your LLM agent will automatically:
 - Synthesize captures into structured documentation
 - Maintain 1:1 parity between code and wiki
 - Create Architecture Decision Records (ADRs)
+- Use `python <path-to-skill>/scripts/capture.py --pop` to finalize and clear synthesized entries from the queue.
 
 You can also:
 - Use your LLM's scheduling features (if available) for recurring wiki maintenance
