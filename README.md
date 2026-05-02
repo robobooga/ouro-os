@@ -43,11 +43,16 @@ The project "Brain" resides in `ouro/wiki/`:
 
 ### 1. Installation
 
+Using (`npx skills`)[https://github.com/vercel-labs/skills]
+```bash
+npx skills add robobooga/ourobor-os 
+```
+
 Clone this repository and copy the `ouro/` directory into your project's root:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ourobor-os.git
+git clone https://github.com/robobooga/ourobor-os.git
 
 # Copy core functionality
 cp -r ourobor-os/ouro ./
