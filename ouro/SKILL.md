@@ -163,9 +163,11 @@ Consider setting up these recurring workflows:
 - Tools: Read, Edit, Write, Grep
 
 ### Gemini CLI
-- Run capture commands directly in your terminal
-- Use file reading/writing tools for wiki maintenance
-- Tools: read_file, write_file, replace, grep_search
+- Use `invoke_agent` for complex research or batch tasks to keep history lean.
+- Use `update_topic` to maintain a clear narrative during multi-turn workflows.
+- Leverage sub-agents (`codebase_investigator`, `generalist`) for deep codebase analysis.
+- Maintain project context through `GEMINI.md` and `MEMORY.md`.
+- Tools: `read_file`, `write_file`, `replace`, `grep_search`, `run_shell_command`, `invoke_agent`.
 
 ### Cursor / VS Code Extensions
 - Run bootstrap from integrated terminal

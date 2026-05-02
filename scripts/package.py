@@ -7,7 +7,7 @@ def validate_ouro_structure(ouro_dir):
     """Validates that the ouro directory has the required structure."""
     required_files = [
         'README.md',
-        'AGENT.md',
+        'AGENT_PROTOCOL.md',
         'SKILL.md',
         'scripts/bootstrap.py',
         'scripts/capture.py',

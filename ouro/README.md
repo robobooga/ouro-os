@@ -34,13 +34,13 @@ cp -r ouro ~/.claude/skills/
 #### Gemini CLI
 ```bash
 # From packaged distribution (macOS/Linux)
-unzip ouro-skill.zip -d ~/.agents/skills/
+unzip ouro-skill.zip -d ~/.gemini/skills/
 
 # From source repository
-cp -r ouro ~/.agents/skills/
+cp -r ouro ~/.gemini/skills/
 
 # Windows PowerShell (from source)
-Copy-Item -Recurse -Path "ouro" -Destination "$HOME\.agents\skills\"
+Copy-Item -Recurse -Path "ouro" -Destination "$HOME\.gemini\skills\"
 ```
 
 #### Cursor / Cline / VS Code Extensions
@@ -153,7 +153,7 @@ This unified distribution works across all LLM tools because:
 ouro/
 ├── SKILL.md                         # Platform-agnostic skill definition
 ├── README.md                        # This file
-├── AGENT.md                         # Agent maintenance protocol
+├── AGENT_PROTOCOL.md                # Agent maintenance protocol
 ├── scripts/
 │   ├── bootstrap.py                 # Smart initialization with environment detection
 │   └── capture.py                   # Portable capture script
