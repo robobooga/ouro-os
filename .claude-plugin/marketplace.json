@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "Ourobor OS",
+  "owner": {
+    "name": "robobooga",
+    "email": "nick.tan.xs@gmail.com"
+  },
+  "metadata": {
+    "description": "Portable, compounding LLM wiki that grows with every development session"
+  },
+  "plugins": [
+    {
+      "name": "ouro",
+      "source": "./ouro",
+      "description": "Portable, compounding LLM wiki foundation (Ourobor OS). Initialize a structured documentation system that evolves with your codebase using Doxygen tags. Works with Claude Code, Gemini CLI, Cursor, and other LLM tools.",
+      "version": "1.0.0",
+      "author": {
+        "name": "robobooga",
+        "url": "https://github.com/robobooga"
+      },
+      "homepage": "https://github.com/robobooga/ourobor-os",
+      "repository": "https://github.com/robobooga/ourobor-os",
+      "license": "MIT",
+      "keywords": ["wiki", "knowledge-base", "documentation", "llm", "doxygen", "external-brain"],
+      "category": "productivity"
+    }
+  ]
+}

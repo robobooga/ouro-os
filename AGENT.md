@@ -18,11 +18,14 @@ Ourobor OS is a portable, compounding knowledge system designed as an "External 
 ```
 ourobor-os/
 ├── docs/                 # Internal working documentation for Ourobor OS development
-├── ouro/                 # The core portable system (reference implementation)
+├── ouro/                 # The core portable system (source of truth)
 │   ├── AGENT.md          # Agent maintenance protocol instructions
+│   ├── README.md         # Skill installation and usage guide
+│   ├── SKILL.md          # Platform-agnostic skill definition
 │   ├── scripts/
+│   │   ├── bootstrap.py  # Project initialization with environment detection
 │   │   └── capture.py    # Doxygen tag extraction and staging
-│   └── wiki/             # The "Brain"
+│   └── wiki/             # The "Brain" (template structure)
 │       ├── index.md      # Central hub and catalog
 │       ├── schema.md     # Operating manual and Doxygen standards
 │       ├── entities/     # 1:1 mirrored codebase documentation
@@ -30,18 +33,16 @@ ourobor-os/
 │       ├── patterns/     # Reusable architectural abstractions
 │       ├── maps/         # High-level mental models
 │       └── capture-queue.md  # Staged snippets awaiting synthesis
-└── dist-skill/           # Universal LLM skill distribution
-    └── ouro/
-        ├── SKILL.md      # Platform-agnostic skill definition
-        ├── README.md     # Installation guide for all LLMs
-        ├── scripts/      # Bootstrap (with environment detection) & capture
-        └── assets/       # Template files for new projects
+├── scripts/
+│   └── package.py        # Packaging script for distribution
+└── dist/                 # Generated distribution packages (gitignored)
+    └── ouro-skill.zip    # Packaged skill ready for distribution
 ```
 
 **Important**: 
 - `docs/` is for Ourobor OS project development planning
-- `ouro/` is the reference implementation of the portable wiki system
-- `dist-skill/` contains the universal skill package for distribution
+- `ouro/` is the complete, distributable skill package
+- `scripts/package.py` creates distribution archives from `ouro/`
 - The distribution is platform-agnostic and works with Claude, Gemini, Cursor, and any LLM tool
 
 ## Development Commands
@@ -59,6 +60,9 @@ python ./ouro/scripts/capture.py <file_path>
 
 # Stage raw snippet
 python ./ouro/scripts/capture.py "snippet content"
+
+# Pop the oldest capture for granular digestion
+python ./ouro/scripts/capture.py --pop
 ```
 
 ### Integration
@@ -66,10 +70,12 @@ python ./ouro/scripts/capture.py "snippet content"
 There are two ways to integrate Ourobor OS into a project:
 
 1. **Via LLM Skill** (Recommended):
-   - Claude Code: `cp -r dist-skill/ouro ~/.claude/skills/`
-   - Gemini CLI: `cp -r dist-skill/ouro ~/.agents/skills/`
-   - Cursor: `cp -r dist-skill/ouro ~/.cursor/skills/`
-   - Other LLMs: See `dist-skill/README.md` for installation paths
+   - Obtain the packaged skill (from Claude Skills Marketplace or build from source)
+   - Extract to your LLM's skills directory:
+     - Claude Code: `~/.claude/skills/ouro/`
+     - Gemini CLI: `~/.agents/skills/ouro/`
+     - Cursor: `~/.cursor/skills/ouro/`
+     - Other LLMs: See `ouro/README.md` for installation paths
    - Bootstrap in target project using the skill's bootstrap script
    - The bootstrap script auto-detects your LLM environment and adapts accordingly
 
@@ -100,7 +106,7 @@ The wiki uses structured Doxygen tags within Markdown for machine-readability:
 ## Key Implementation Details
 
 ### capture.py Architecture
-- Ignores binary files and common directories (`.git`, `node_modules`, `__pycache__`, `.venv`, `dist`, `build`, `.next`)
+- Ignores binary files and common directories (`.git`, `node_modules`, `__pycache__`, `.venv`, `dist`, `build`, `.next`, `dist-skill`)
 - Filters files containing `@entity` or `@brief` tags
 - Appends captures to the queue with timestamp and source metadata
 - Supports both file paths and raw snippet input
@@ -115,13 +121,14 @@ The wiki uses structured Doxygen tags within Markdown for machine-readability:
 
 When working on this project:
 
-1. **Monitor** `ouro/wiki/capture-queue.md` for new captures
-2. **Synthesize** captures into appropriate `wiki/entities/` or `wiki/patterns/` files
-3. **Structure** all entity files with `@entity` and `@brief` tags at minimum
-4. **Mirror** critical code logic using `@snippet` blocks
-5. **Update** `wiki/index.md` when adding new entities
-6. **Maintain** 1:1 parity between code modules and documentation
-7. **Verify** that the foundation structure remains consistent with `schema.md`
+1. **Monitor** `ouro/wiki/capture-queue.md` for new captures.
+2. **Synthesize** captures granularly using `python ouro/scripts/capture.py --pop`. This ensures context is maintained by processing one entry at a time.
+3. **Transform** popped entries into appropriate `wiki/entities/` or `wiki/patterns/` files.
+4. **Structure** all entity files with `@entity` and `@brief` tags at minimum.
+5. **Mirror** critical code logic using `@snippet` blocks.
+6. **Update** `wiki/index.md` when adding new entities.
+7. **Maintain** 1:1 parity between code modules and documentation.
+8. **Verify** that the foundation structure remains consistent with `schema.md`.
 
 ## Documentation Standards
 
@@ -134,9 +141,9 @@ When working on this project:
 
 ## Skill Distribution System
 
-Ourobor OS provides a **universal, platform-agnostic skill distribution** in `dist-skill/`:
+Ourobor OS provides a **universal, platform-agnostic skill distribution** via the `ouro/` directory:
 
-### Universal Distribution (`dist-skill/`)
+### Universal Distribution
 - Works with Claude Code, Gemini CLI, Cursor, Cline, Aider, Continue, and any LLM tool
 - Smart bootstrap script detects LLM environment automatically
 - Adapts instructions and tips based on detected environment
@@ -150,18 +157,35 @@ Ourobor OS provides a **universal, platform-agnostic skill distribution** in `di
 - Continue: `~/.continue/skills/ouro/`
 - Project-local: `<project>/.llm/skills/ouro/` or `<project>/ouro/`
 
-### Shared Components
-All LLMs use the same:
-- `capture.py` script (fully portable, Python standard library only)
-- Template wiki files (index.md, schema.md, capture-queue.md)
-- Doxygen protocol standards
-- Core maintenance workflow
+### Core Components
+The `ouro/` directory contains everything needed for distribution:
+- `SKILL.md` — Platform-agnostic skill definition
+- `README.md` — Installation guide for all LLMs
+- `AGENT.md` — Agent maintenance protocol (this file)
+- `scripts/bootstrap.py` — Smart initialization with environment detection
+- `scripts/capture.py` — Portable capture script (Python standard library only)
+- `wiki/` — Template structure with schema.md, index.md, capture-queue.md
+- `wiki/entities/`, `wiki/decisions/`, `wiki/patterns/`, `wiki/maps/` — Documentation directories
 
-### When working on Ourobor OS development:
-- Update the core `ouro/` reference implementation first
-- Sync changes to `dist-skill/` as needed
-- Test across multiple LLM tools to ensure portability
-- Use environment detection features in bootstrap.py for LLM-specific behaviors
+### Packaging for Distribution
+
+The `ouro/` directory is the source of truth and can be distributed as-is. A packaging script creates distribution archives:
+
+```bash
+python scripts/package.py
+```
+
+This script:
+1. Validates the `ouro/` directory structure
+2. Creates a clean distribution archive
+3. Generates `dist/ouro-skill.zip` ready for distribution
+4. Optionally creates platform-specific packages
+
+**Development Workflow**:
+1. Make all changes directly in the `ouro/` directory
+2. Test changes by copying `ouro/` to a test project or LLM skills directory
+3. Run `python scripts/package.py` to create distribution archive
+4. Test the packaged skill in a fresh project using the bootstrap script
 
 ## Development Context
 

@@ -29,9 +29,9 @@ def detect_llm_environment():
     return detected, primary_instruction_file
 
 def bootstrap():
-    # Source template directory is sibling to the scripts directory
+    # Source template directory is the skill's wiki directory
     script_dir = Path(__file__).resolve().parent
-    template_src = script_dir.parent / 'assets' / 'ouro-template' / 'wiki'
+    template_src = script_dir.parent / 'wiki'
 
     # Destination is the 'ouro' folder in the current project
     dest_ouro = Path.cwd() / 'ouro'
@@ -40,15 +40,15 @@ def bootstrap():
     # Detect LLM environment
     detected_llms, primary_file = detect_llm_environment()
     if detected_llms:
-        print(f"✓ Detected LLM environment(s): {', '.join(detected_llms)}")
+        print(f"[OK] Detected LLM environment(s): {', '.join(detected_llms)}")
         if primary_file:
-            print(f"✓ Primary instruction file: {primary_file}")
+            print(f"[OK] Primary instruction file: {primary_file}")
 
     # Initialize wiki structure
     if dest_wiki.exists():
-        print(f"⚠ Ouro wiki already exists at {dest_wiki}. Skipping copy.")
+        print(f"[!] Ouro wiki already exists at {dest_wiki}. Skipping copy.")
     else:
-        print(f"📁 Initializing Ouro wiki at {dest_wiki}...")
+        print(f"[*] Initializing Ouro wiki at {dest_wiki}...")
         dest_wiki.mkdir(parents=True, exist_ok=True)
 
         # Create subdirectories
@@ -62,9 +62,9 @@ def bootstrap():
             for item in template_src.iterdir():
                 if item.is_file():
                     shutil.copy2(item, dest_wiki / item.name)
-            print("✓ Wiki structure initialized.")
+            print("[OK] Wiki structure initialized.")
         else:
-            print(f"⚠ Warning: Template source {template_src} not found. Only directories created.")
+            print(f"[!] Warning: Template source {template_src} not found. Only directories created.")
 
     # Platform-agnostic maintenance protocol
     protocol = """
@@ -121,25 +121,25 @@ You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki
             found_instruction_file = True
             content = file_path.read_text(encoding='utf-8')
             if "Ourobor OS Maintenance Protocol" not in content:
-                print(f"📝 Appending Ourobor OS protocol to {filename}...")
+                print(f"[*] Appending Ourobor OS protocol to {filename}...")
                 with open(file_path, 'a', encoding='utf-8') as f:
                     f.write("\n" + protocol)
             else:
-                print(f"✓ Ourobor protocol already present in {filename}.")
+                print(f"[OK] Ourobor protocol already present in {filename}.")
 
     # If no instruction file exists at all, create one (use detection if available, else generic)
     if not found_instruction_file:
         target_file = primary_file or 'AI_INSTRUCTIONS.md'
-        print(f"📝 Creating {target_file} with Ourobor OS protocol...")
+        print(f"[*] Creating {target_file} with Ourobor OS protocol...")
         with open(Path.cwd() / target_file, 'w', encoding='utf-8') as f:
             f.write("# Project Instructions for LLM Agents\n" + protocol)
 
     print("\n" + "="*60)
-    print("✓ Bootstrap complete. Ourobor OS is ready!")
+    print("[OK] Bootstrap complete. Ourobor OS is ready!")
     print("="*60)
 
     # Generic next steps with environment-specific tips
-    print("\n📝 Next steps:")
+    print("\n[*] Next steps:")
     print("1. Read the wiki index: ouro/wiki/index.md")
     print("2. Capture your codebase:")
     print(f"   python {script_dir}/capture.py --crawl")
@@ -148,13 +148,13 @@ You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki
     print("4. Synthesize captures into structured documentation")
 
     if 'Claude Code' in detected_llms:
-        print("\n💡 Claude Code tips:")
+        print("\n[TIP] Claude Code tips:")
         print("   - Use '!' prefix to run shell commands")
         print("   - Use /schedule for recurring wiki maintenance")
         print("   - Use tasks to track synthesis work")
 
     if detected_llms:
-        print(f"\n🎯 Detected environment: {', '.join(detected_llms)}")
+        print(f"\n[>] Detected environment: {', '.join(detected_llms)}")
 
     print("="*60 + "\n")
 

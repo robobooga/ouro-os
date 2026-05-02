@@ -1,6 +1,6 @@
 # Ourobor OS - Universal LLM Skill
 
-This directory contains the platform-agnostic skill package for Ourobor OS, a portable compounding knowledge system for LLM agents.
+This is the complete, distributable Ourobor OS skill package - a platform-agnostic, portable compounding knowledge system for LLM agents.
 
 ## What is Ourobor OS?
 
@@ -24,31 +24,40 @@ Ourobor OS transforms project documentation into a structured, machine-readable 
 
 #### Claude Code
 ```bash
-cp -r dist-skill/ouro ~/.claude/skills/
+# From packaged distribution
+unzip ouro-skill.zip -d ~/.claude/skills/
+
+# Or from source repository
+cp -r ouro ~/.claude/skills/
 ```
 
 #### Gemini CLI
 ```bash
-# macOS/Linux
-cp -r dist-skill/ouro ~/.agents/skills/
+# From packaged distribution (macOS/Linux)
+unzip ouro-skill.zip -d ~/.agents/skills/
 
-# Windows PowerShell
-Copy-Item -Recurse -Path "dist-skill/ouro" -Destination "$HOME\.agents\skills\"
+# From source repository
+cp -r ouro ~/.agents/skills/
+
+# Windows PowerShell (from source)
+Copy-Item -Recurse -Path "ouro" -Destination "$HOME\.agents\skills\"
 ```
 
 #### Cursor / Cline / VS Code Extensions
 ```bash
 # Option 1: Install to user skills directory (if supported)
-cp -r dist-skill/ouro ~/.cursor/skills/
+unzip ouro-skill.zip -d ~/.cursor/skills/
+# Or: cp -r ouro ~/.cursor/skills/
 
 # Option 2: Project-local (recommended for team sharing)
-cp -r dist-skill/ouro <your-project>/.llm/skills/
+unzip ouro-skill.zip -d <your-project>/.llm/skills/
+# Or: cp -r ouro <your-project>/.llm/skills/
 ```
 
 #### Aider / CLI-based LLMs
 ```bash
 # Manual integration - copy to project
-cp -r dist-skill/ouro <your-project>/
+cp -r ouro <your-project>/
 ```
 
 ### Manual Integration (Any LLM)
@@ -132,27 +141,26 @@ This unified distribution works across all LLM tools because:
 - `capture.py` uses only standard Python Path operations
 - All paths are relative to `ouro/` directory
 - Wiki structure is self-contained
+- Automatically ignores common build/dependency directories and `dist-skill/` to prevent noise.
 
 ## Directory Structure
 
 ```
-dist-skill/
-└── ouro/
-    ├── SKILL.md                         # Platform-agnostic skill definition
-    ├── README.md                        # This file
-    ├── scripts/
-    │   ├── bootstrap.py                 # Smart initialization with environment detection
-    │   └── capture.py                   # Portable capture script
-    └── assets/
-        └── ouro-template/
-            └── wiki/
-                ├── index.md             # Wiki hub template
-                ├── schema.md            # Doxygen protocol template
-                ├── capture-queue.md     # Empty capture queue
-                ├── entities/            # Code documentation directory
-                ├── decisions/           # ADR directory
-                ├── patterns/            # Patterns directory
-                └── maps/                # Mental models directory
+ouro/
+├── SKILL.md                         # Platform-agnostic skill definition
+├── README.md                        # This file
+├── AGENT.md                         # Agent maintenance protocol
+├── scripts/
+│   ├── bootstrap.py                 # Smart initialization with environment detection
+│   └── capture.py                   # Portable capture script
+└── wiki/                            # Template wiki structure
+    ├── index.md                     # Wiki hub template
+    ├── schema.md                    # Doxygen protocol template
+    ├── capture-queue.md             # Empty capture queue
+    ├── entities/                    # Code documentation directory
+    ├── decisions/                   # ADR directory
+    ├── patterns/                    # Patterns directory
+    └── maps/                        # Mental models directory
 ```
 
 ## Key Features
@@ -175,29 +183,16 @@ Automatically detects and adapts to:
 - Optional LLM-specific features (scheduling, tasks) when available
 - Graceful degradation on simpler LLM tools
 
-## Differences from Legacy Distributions
+## Building from Source
 
-This unified distribution replaces:
-- ❌ `dist-skill-claude/` (Claude-specific)
-- ❌ `dist-skill-gemini/` (Gemini-specific)
+This directory (`ouro/`) is the complete distributable package. To create distribution archives:
 
-### Migration from Legacy Distributions
+```bash
+# From the parent ourobor-os repository
+python scripts/package.py
+```
 
-If you previously used `dist-skill-claude/` or `dist-skill-gemini/`:
-
-1. **Remove old installation**:
-   ```bash
-   rm -rf ~/.claude/skills/ouro  # or ~/.agents/skills/ouro
-   ```
-
-2. **Install unified distribution**:
-   ```bash
-   cp -r dist-skill/ouro ~/.claude/skills/  # or your LLM's path
-   ```
-
-3. **Re-bootstrap your projects** (optional):
-   - The wiki structure remains compatible
-   - Re-running bootstrap will update instruction files with the new protocol
+This generates `dist/ouro-skill.zip` ready for distribution.
 
 ## Files Included
 
@@ -223,8 +218,8 @@ Portable capture script that:
 - Works identically across all LLMs
 - Uses `Path.cwd() / 'ouro'` for portability
 
-### assets/ouro-template/wiki/
-Template files for a fresh wiki:
+### wiki/
+Template files for a fresh wiki (copied to projects during bootstrap):
 - `index.md`: Central catalog and hub
 - `schema.md`: Doxygen protocol and operating manual
 - `capture-queue.md`: Empty staging area

@@ -35,14 +35,26 @@ The project "Brain" resides in `ouro/wiki/`:
 ## 🚀 Quick Start
 
 ### 1. Installation
-The **[Universal Ourobor OS Skill](./dist-skill/README.md)** works with all LLM tools:
 
-- **Claude Code**: `cp -r dist-skill/ouro ~/.claude/skills/`
-- **Gemini CLI**: `cp -r dist-skill/ouro ~/.agents/skills/`
-- **Cursor**: `cp -r dist-skill/ouro ~/.cursor/skills/`
-- **Other LLMs**: See [installation guide](./dist-skill/README.md) for your specific tool
+#### For End Users
+Download the packaged skill from the [Claude Skills Marketplace](#) or obtain a distribution zip, then install to your LLM's skills directory:
+
+- **Claude Code**: Extract to `~/.claude/skills/`
+- **Gemini CLI**: Extract to `~/.agents/skills/`
+- **Cursor**: Extract to `~/.cursor/skills/`
+- **Other LLMs**: Extract to your LLM's skills directory or project root
 
 The distribution auto-detects your LLM environment and adapts instructions accordingly.
+
+#### For Developers
+Clone this repository and package from source:
+
+```bash
+# Package the skill for distribution
+python scripts/package.py
+
+# Output: dist/ouro-skill.zip
+```
 
 For manual integration, copy the core `ouro/` directory into your project's root.
 

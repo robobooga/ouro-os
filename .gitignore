@@ -18,3 +18,7 @@ Thumbs.db
 # IDE settings
 .vscode/
 .idea/
+.claude/
+
+# Distribution packages
+dist/
