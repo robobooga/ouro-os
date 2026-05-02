@@ -35,10 +35,19 @@ The project "Brain" resides in `ouro/wiki/`:
 ## 🚀 Quick Start
 
 ### 1. Installation
-Copy the `ouro/` directory into your project's root.
+The **[Universal Ourobor OS Skill](./dist-skill/README.md)** works with all LLM tools:
+
+- **Claude Code**: `cp -r dist-skill/ouro ~/.claude/skills/`
+- **Gemini CLI**: `cp -r dist-skill/ouro ~/.agents/skills/`
+- **Cursor**: `cp -r dist-skill/ouro ~/.cursor/skills/`
+- **Other LLMs**: See [installation guide](./dist-skill/README.md) for your specific tool
+
+The distribution auto-detects your LLM environment and adapts instructions accordingly.
+
+For manual integration, copy the core `ouro/` directory into your project's root.
 
 ### 2. Integration
-Enable the agent by appending the contents of `ouro/AGENT.md` to your project's instructions (e.g., `GEMINI.md` or `CLAUDE.md`).
+Enable the agent by appending the maintenance protocols to your project's instructions (e.g., `GEMINI.md` or `CLAUDE.md`). The bootstrap scripts in the optimized distributions handle this automatically.
 
 ### 3. Usage
 Run the capture script to scan your project for Doxygen tags:

@@ -1,0 +1,162 @@
+import sys
+import shutil
+import os
+from pathlib import Path
+
+def detect_llm_environment():
+    """Detect which LLM environment(s) are present and return prioritized instruction file."""
+    cwd = Path.cwd()
+    detected = []
+    primary_instruction_file = None
+
+    # Check for various LLM-specific directories and set primary instruction file
+    if (cwd / '.claude').exists():
+        detected.append('Claude Code')
+        primary_instruction_file = 'CLAUDE.md'
+    if (cwd / '.cursor').exists():
+        detected.append('Cursor')
+        if not primary_instruction_file:
+            primary_instruction_file = 'CURSOR.md'
+    if (cwd / '.aider').exists():
+        detected.append('Aider')
+        if not primary_instruction_file:
+            primary_instruction_file = 'AIDER.md'
+    if (cwd / '.continue').exists():
+        detected.append('Continue')
+        if not primary_instruction_file:
+            primary_instruction_file = 'CONTINUE.md'
+
+    return detected, primary_instruction_file
+
+def bootstrap():
+    # Source template directory is sibling to the scripts directory
+    script_dir = Path(__file__).resolve().parent
+    template_src = script_dir.parent / 'assets' / 'ouro-template' / 'wiki'
+
+    # Destination is the 'ouro' folder in the current project
+    dest_ouro = Path.cwd() / 'ouro'
+    dest_wiki = dest_ouro / 'wiki'
+
+    # Detect LLM environment
+    detected_llms, primary_file = detect_llm_environment()
+    if detected_llms:
+        print(f"✓ Detected LLM environment(s): {', '.join(detected_llms)}")
+        if primary_file:
+            print(f"✓ Primary instruction file: {primary_file}")
+
+    # Initialize wiki structure
+    if dest_wiki.exists():
+        print(f"⚠ Ouro wiki already exists at {dest_wiki}. Skipping copy.")
+    else:
+        print(f"📁 Initializing Ouro wiki at {dest_wiki}...")
+        dest_wiki.mkdir(parents=True, exist_ok=True)
+
+        # Create subdirectories
+        (dest_wiki / 'entities').mkdir(exist_ok=True)
+        (dest_wiki / 'decisions').mkdir(exist_ok=True)
+        (dest_wiki / 'patterns').mkdir(exist_ok=True)
+        (dest_wiki / 'maps').mkdir(exist_ok=True)
+
+        # Copy template files
+        if template_src.exists():
+            for item in template_src.iterdir():
+                if item.is_file():
+                    shutil.copy2(item, dest_wiki / item.name)
+            print("✓ Wiki structure initialized.")
+        else:
+            print(f"⚠ Warning: Template source {template_src} not found. Only directories created.")
+
+    # Platform-agnostic maintenance protocol
+    protocol = """
+## Ourobor OS Maintenance Protocol
+
+You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki/` directory.
+
+### 1. Monitor the Capture Queue
+- Regularly read `ouro/wiki/capture-queue.md` using your file reading tool.
+- When new snippets are found, "Synthesize" them into the appropriate `ouro/wiki/entities/`, `ouro/wiki/patterns/`, or `ouro/wiki/maps/` files.
+- Use **Doxygen** tags (`@entity`, `@brief`, `@snippet`, etc.) to structure the documentation.
+- Once synthesized, remove the entry from the capture queue.
+
+### 2. Doxygen Standards
+- Always include an `@entity` and `@brief` tag at the top of entity/pattern files.
+- Mirror critical code logic using `@snippet` blocks.
+- Highlight architectural notes with `@note` or `@warning`.
+
+### 3. Architecture Decision Records (ADR)
+- Whenever a significant architectural decision is made, create or update an ADR in `ouro/wiki/decisions/`.
+- ADRs must document:
+  - **Context**: Why the decision is being made.
+  - **Alternatives**: Other options considered.
+  - **Trade-offs**: What was gained and what was lost.
+  - **Rationale**: The reasoning behind the final choice.
+- Always link new ADRs in the `ouro/wiki/index.md` file.
+
+### 4. Wiki Maintenance Tools
+- Use your LLM's **file reading** tool to review wiki files and the capture queue.
+- Use your LLM's **file editing** tool to update existing entity files.
+- Use your LLM's **file writing** tool to create new entities, patterns, or decisions.
+- Use your LLM's **search/grep** tool to find existing documentation before creating duplicates.
+
+### 5. LLM-Specific Features (if available)
+- **Recurring tasks**: If your LLM supports scheduling (e.g., Claude's `/schedule`), set up weekly capture queue reviews.
+- **Task tracking**: If your LLM has a task system, use it to track pending synthesis work.
+- **Plan mode**: If your LLM has a planning mode, use it for complex wiki restructuring.
+
+### 6. Verification
+- Ensure `ouro/wiki/index.md` is updated with any new entities, ADRs, patterns, or maps.
+- Maintain a 1:1 parity between code modules and wiki documentation.
+"""
+
+    # Update all existing instruction files (projects may use multiple LLMs)
+    instruction_files = [
+        'CLAUDE.md', 'GEMINI.md', 'CURSOR.md', 'CLINE.md',
+        'AIDER.md', 'CONTINUE.md', 'AI_INSTRUCTIONS.md'
+    ]
+
+    found_instruction_file = False
+    for filename in instruction_files:
+        file_path = Path.cwd() / filename
+        if file_path.exists():
+            found_instruction_file = True
+            content = file_path.read_text(encoding='utf-8')
+            if "Ourobor OS Maintenance Protocol" not in content:
+                print(f"📝 Appending Ourobor OS protocol to {filename}...")
+                with open(file_path, 'a', encoding='utf-8') as f:
+                    f.write("\n" + protocol)
+            else:
+                print(f"✓ Ourobor protocol already present in {filename}.")
+
+    # If no instruction file exists at all, create one (use detection if available, else generic)
+    if not found_instruction_file:
+        target_file = primary_file or 'AI_INSTRUCTIONS.md'
+        print(f"📝 Creating {target_file} with Ourobor OS protocol...")
+        with open(Path.cwd() / target_file, 'w', encoding='utf-8') as f:
+            f.write("# Project Instructions for LLM Agents\n" + protocol)
+
+    print("\n" + "="*60)
+    print("✓ Bootstrap complete. Ourobor OS is ready!")
+    print("="*60)
+
+    # Generic next steps with environment-specific tips
+    print("\n📝 Next steps:")
+    print("1. Read the wiki index: ouro/wiki/index.md")
+    print("2. Capture your codebase:")
+    print(f"   python {script_dir}/capture.py --crawl")
+    print("3. Monitor the capture queue:")
+    print("   Ask your LLM to read ouro/wiki/capture-queue.md")
+    print("4. Synthesize captures into structured documentation")
+
+    if 'Claude Code' in detected_llms:
+        print("\n💡 Claude Code tips:")
+        print("   - Use '!' prefix to run shell commands")
+        print("   - Use /schedule for recurring wiki maintenance")
+        print("   - Use tasks to track synthesis work")
+
+    if detected_llms:
+        print(f"\n🎯 Detected environment: {', '.join(detected_llms)}")
+
+    print("="*60 + "\n")
+
+if __name__ == "__main__":
+    bootstrap()
