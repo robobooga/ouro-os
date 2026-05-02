@@ -4,7 +4,8 @@ from datetime import datetime
 from pathlib import Path
 
 # Path to the capture queue
-QUEUE_PATH = Path(__file__).resolve().parent.parent / 'wiki' / 'capture-queue.md'
+PROJECT_ROOT = Path.cwd()
+QUEUE_PATH = PROJECT_ROOT / 'ouro' / 'wiki' / 'capture-queue.md'
 
 def is_binary(file_path):
     """Heuristic to check if a file is binary."""
@@ -73,7 +74,7 @@ def crawl(directory):
     print(f'Crawling directory: {dir_path}...')
     count = 0
     # Avoid crawling the wiki log directory itself
-    wiki_path = Path(__file__).resolve().parent.parent / 'wiki'
+    wiki_path = PROJECT_ROOT / 'ouro' / 'wiki'
     ignored_dirs = {'.git', 'node_modules', '__pycache__', '.venv', 'dist', 'build', '.next', 'ouro', 'dist-skill'}
     
     for file_path in dir_path.rglob('*'):
