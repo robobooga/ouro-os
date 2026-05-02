@@ -1,4 +1,4 @@
-# Ourobor OS: The AI-Native Documentation Ecosystem
+# Ourobor OS: The Living Project Documentation Ecosystem
 
 Ourobor OS is a holistic, AI-native "operating system" for project documentation. It creates a compounding knowledge base designed to be perfectly readable by humans and efficiently crawlable by LLMs. By embedding the knowledge capture directly into the development workflow, Ourobor OS ensures that your project documentation remains a living, evolving part of the codebase.
 
