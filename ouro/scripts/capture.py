@@ -64,6 +64,74 @@ def stage(input_str):
     except Exception as e:
         print(f'Failed to write to capture queue: {e}')
 
+IGNORED_DIRS = {
+    # Version control
+    '.git', '.svn', '.hg',
+    # Python
+    '__pycache__', '.venv', 'venv', 'env', '.tox', '.pytest_cache', '.mypy_cache', '.ruff_cache',
+    # JavaScript / Node
+    'node_modules', 'bower_components', '.yarn', '.pnp', '.npm',
+    # Build outputs
+    'dist', 'build', 'out', 'target', '_build', 'dist-skill', '.next', '.nuxt', '.svelte-kit', '.expo',
+    # Caches
+    '.cache', 'cache', '.parcel-cache',
+    # Java / Kotlin / Scala
+    '.gradle', '.m2',
+    # Ruby
+    '.bundle',
+    # Haskell / Elm
+    '.stack-work', 'elm-stuff',
+    # Elixir / Erlang
+    '_build', 'deps',
+    # iOS / macOS
+    'Pods', 'DerivedData',
+    # Misc build / temp
+    'tmp', 'temp', 'logs', 'coverage', '.coverage',
+    # Infrastructure-as-code state (may contain secrets)
+    '.terraform', '.vagrant',
+    # Credential / secret directories
+    '.aws', '.ssh', '.gnupg', '.gpg',
+    'secrets', '.secrets', 'credentials', '.credentials',
+    'certs', 'certificates', '.certs', 'keystore', 'keystores',
+    'keys', '.keys', 'private', '.private', 'vault',
+    # Project-specific
+    'ouro',
+}
+
+# Individual filenames that are likely to contain secrets
+SENSITIVE_NAMES = {
+    '.env', '.env.local', '.env.development', '.env.production',
+    '.env.staging', '.env.test', '.env.example',
+    'id_rsa', 'id_dsa', 'id_ecdsa', 'id_ed25519',
+    'id_rsa.pub', 'id_dsa.pub', 'id_ecdsa.pub', 'id_ed25519.pub',
+    'known_hosts', 'authorized_keys',
+    '.netrc', '.pgpass',
+    'secrets.json', 'credentials.json', 'service-account.json',
+}
+
+# File extensions that are likely to contain secrets or are binary-adjacent
+SENSITIVE_SUFFIXES = {
+    '.pem', '.key', '.p12', '.pfx', '.cer', '.crt', '.der', '.ca-bundle',
+    '.keystore', '.jks', '.p8',
+    '.secret', '.secrets',
+    '.token', '.tokens',
+    '.asc',  # GPG armored
+}
+
+def is_sensitive(file_path: Path) -> bool:
+    name = file_path.name.lower()
+    if name in SENSITIVE_NAMES:
+        return True
+    if file_path.suffix.lower() in SENSITIVE_SUFFIXES:
+        return True
+    # Catch patterns like .env.local, *credentials*.json, *secret*.yml
+    if name.startswith('.env'):
+        return True
+    if any(kw in name for kw in ('secret', 'credential', 'password', 'passwd', 'apikey', 'api_key', 'token', 'private_key')):
+        return True
+    return False
+
+
 def crawl(directory):
     """Crawls a directory for files containing Doxygen tags."""
     dir_path = Path(directory).resolve()
@@ -73,33 +141,36 @@ def crawl(directory):
 
     print(f'Crawling directory: {dir_path}...')
     count = 0
-    # Avoid crawling the wiki log directory itself
+    skipped_sensitive = 0
     wiki_path = PROJECT_ROOT / 'ouro' / 'wiki'
-    ignored_dirs = {'.git', 'node_modules', '__pycache__', '.venv', 'dist', 'build', '.next', 'ouro', 'dist-skill'}
-    
+
     for file_path in dir_path.rglob('*'):
-        # Check if file is inside the wiki directory to skip it
         if wiki_path in file_path.parents or file_path.parent == wiki_path:
             continue
 
-        # Skip ignored directories
-        if any(part in ignored_dirs for part in file_path.parts):
+        if any(part in IGNORED_DIRS for part in file_path.parts):
             continue
-            
-        if file_path.is_file():
-            if is_binary(file_path):
-                continue
-                
-            try:
-                # Capture all non-binary files
-                stage(str(file_path))
-                count += 1
-            except (UnicodeDecodeError, PermissionError):
-                continue
-            except Exception as e:
-                print(f'Skipping file "{file_path}": {e}')
-    
-    print(f'Crawl complete. Staged {count} files.')
+
+        if not file_path.is_file():
+            continue
+
+        if is_sensitive(file_path):
+            print(f'Skipping sensitive file: {file_path}')
+            skipped_sensitive += 1
+            continue
+
+        if is_binary(file_path):
+            continue
+
+        try:
+            stage(str(file_path))
+            count += 1
+        except (UnicodeDecodeError, PermissionError):
+            continue
+        except Exception as e:
+            print(f'Skipping file "{file_path}": {e}')
+
+    print(f'Crawl complete. Staged {count} files. Skipped {skipped_sensitive} sensitive file(s).')
 
 def pop():
     """Pops the first capture from the queue and prints it."""

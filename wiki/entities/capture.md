@@ -26,11 +26,21 @@ If the queue contains `*(Empty)*`, it is removed before appending.
 ### `crawl(directory)`
 @param directory Root directory to walk recursively. Defaults to `.` via CLI.
 
-Walks all non-binary files and calls `stage()` on each, skipping ignored directories and the `ouro/wiki/` directory itself to avoid recursive capture.
+Walks all non-binary files and calls `stage()` on each, skipping ignored directories, sensitive files, and the `ouro/wiki/` directory itself to avoid recursive capture. Reports a count of staged files and separately a count of skipped sensitive files.
 
-**Hardcoded ignored directories**: `.git`, `node_modules`, `__pycache__`, `.venv`, `dist`, `build`, `.next`, `ouro`, `dist-skill`
+**Module-level constants** (edit in `capture.py` to customise for your project):
 
-@warning Currently stages every text file including config files, dotfiles, and lock files. No smart filtering exists — the LLM must triage noise from the queue manually. A configurable exclusion list and `--status` command are known missing features.
+- **`IGNORED_DIRS`** — directory names that cause an entire subtree to be skipped. Covers version control, Python/JS/Go/Rust/JVM build and cache directories, infrastructure state (`.terraform`), and credential directories (`.aws`, `.ssh`, `secrets`, `certs`, `vault`, etc.).
+- **`SENSITIVE_NAMES`** — exact filenames always skipped (`.env`, `id_rsa`, `credentials.json`, etc.).
+- **`SENSITIVE_SUFFIXES`** — extensions always skipped (`.pem`, `.key`, `.p12`, `.pfx`, `.crt`, `.secret`, `.token`, etc.).
+
+See [ADR-005](../decisions/ADR-005-crawl-sensitive-file-guard.md) for the rationale.
+
+### `is_sensitive(file_path)`
+
+Combines `SENSITIVE_NAMES`, `SENSITIVE_SUFFIXES`, and heuristic keyword matching (`secret`, `credential`, `password`, `passwd`, `apikey`, `api_key`, `token`, `private_key` in the filename) to decide whether a file should be skipped during crawl.
+
+@warning `IGNORED_DIRS`, `SENSITIVE_NAMES`, `SENSITIVE_SUFFIXES`, and the keyword list in `is_sensitive()` are project-agnostic defaults. Projects with non-standard secret naming conventions should update these constants directly in `capture.py`.
 
 ### `pop()`
 
@@ -64,5 +74,5 @@ python ouro/scripts/capture.py --pop
 ## Known Gaps
 
 - No `--status` subcommand to show queue length or last capture timestamp.
-- `--crawl` has no user-configurable exclusion list.
+- `IGNORED_DIRS` and `SENSITIVE_*` constants are not user-configurable via CLI flags — editing the source file is required.
 - No deduplication — staging the same file twice creates duplicate entries.

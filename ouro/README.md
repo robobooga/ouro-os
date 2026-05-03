@@ -222,6 +222,14 @@ Portable capture script that:
 - Works identically across all LLMs
 - Uses `Path.cwd() / 'ouro'` for portability
 
+> **Customize for your project**: `capture.py` ships with opinionated defaults for ignored directories and sensitive file detection. Review and adjust these near the top of the file to match your stack:
+>
+> - **`IGNORED_DIRS`** — directories skipped entirely during `--crawl` (build outputs, package managers, caches, credential folders, etc.). Add any project-specific directories that should never be crawled (e.g. `migrations`, `fixtures`, `android`, `ios`).
+> - **`SENSITIVE_NAMES`** / **`SENSITIVE_SUFFIXES`** — exact filenames and extensions that are always skipped regardless of location (`.pem`, `.key`, `.env.*`, etc.). Extend these if your project uses non-standard secret file conventions.
+> - **`is_sensitive()`** — the function that applies the above rules plus heuristic keyword matching (`secret`, `credential`, `token`, etc. in filenames). Edit the keyword list here if your project uses different naming patterns.
+>
+> The goal is to prevent secrets, credentials, or API keys from being written into the capture queue unintentionally.
+
 ### wiki/
 Template files for a fresh wiki (copied to projects during bootstrap):
 - `index.md`: Central catalog and hub

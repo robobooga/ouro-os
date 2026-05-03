@@ -22,6 +22,12 @@ The project's living documentation lives in `wiki/` (root level). This directory
 - **Compounding**: Every session grows the collective intelligence.
 - **1:1 Parity**: Maintain direct mapping between source modules and documentation.
 
+> **RULE**: Any code change made during a session **must** be accompanied by wiki updates in the same response — not as a follow-up. Specifically:
+> - Update the relevant `wiki/entities/*.md` file to reflect changed behaviour, new functions, or removed features.
+> - Create a new `wiki/decisions/ADR-NNN-*.md` if the change involved a non-trivial design decision (new pattern, added constraint, rejected alternative).
+> - Add new ADRs to `wiki/index.md`.
+> Failing to do this is a protocol violation — the wiki is the source of truth, not the code.
+
 ### Doxygen Standards
 - `@entity <name>`: Module/entity defined.
 - `@brief <text>`: One-sentence summary.
