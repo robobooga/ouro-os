@@ -25,6 +25,7 @@ Ourobor OS solves these by embedding documentation into the development flow and
 - **Automated Capture**: Scripts to crawl your codebase and stage new knowledge for synthesis.
 - **Architecture Mapping**: Dedicated tracks for ADRs (Decisions), Patterns, and Mental Models (Maps).
 - **1:1 Parity**: Maintains a direct mapping between source modules and documentation entities.
+- **Web UI**: A static site generator that turns your wiki into a navigable, browser-ready knowledge base.
 
 ## 📂 Structure
 
@@ -36,9 +37,28 @@ Once installed, your project's Brain lives in `ouro/wiki/` (the distributable sk
 - **`patterns/`**: Abstracted, reusable architectural logic.
 - **`capture-queue.md`**: The active capture staging area.
 
+## 🌐 Web UI
+
+The `ouro-webui/` module ships a static site generator that compiles your wiki into a clean, browser-ready documentation site.
+
+**Features:**
+- **Doxygen rendering**: `@entity`, `@brief`, `@note`, and `@warning` tags are rendered as styled HTML components.
+- **Auto-generated navigation**: A sidebar tree is built from your wiki's directory structure, grouped by section (Entities, Decisions, Patterns, Maps).
+- **Responsive layout**: Collapses to a mobile-friendly stacked view on small screens.
+- **Zero JS**: Pure HTML/CSS output — no framework, no build pipeline, no dependencies at runtime.
+- **Configurable source**: Point it at any compatible wiki directory via `--wiki-dir`.
+
+**Build your wiki site:**
+```bash
+python ouro-webui/builder.py --wiki-dir ./wiki
+# Output lands in ouro-webui/dist/
+```
+
+**Live demo:** See this project's own wiki rendered at **[nick-tan.com/ourobor-os](https://nick-tan.com/ourobor-os/)** — a real-world example of an Ourobor OS brain served as a static site.
+
 ## 🔁 Dogfooding: See It In Action
 
-The [`/wiki`](./wiki) directory at the root of this repository is Ourobor OS documenting itself — a live example of what a project Brain looks like in practice. It is the canonical knowledge store for this codebase, maintained using the same agent workflow and Doxygen protocol that ships to users. Browse it to get a concrete sense of how the system works before installing it in your own project.
+The [`/wiki`](./wiki) directory at the root of this repository is Ourobor OS documenting itself — a live example of what a project Brain looks like in practice. It is the canonical knowledge store for this codebase, maintained using the same agent workflow and Doxygen protocol that ships to users. Browse the [live site](https://nick-tan.com/ourobor-os/) or the raw Markdown to get a concrete sense of how the system works before installing it in your own project.
 
 ## 🚀 Quick Start
 
@@ -72,8 +92,7 @@ python ./ouro/scripts/bootstrap.py
 
 ## 🌟 Roadmap
 
-Ourobor OS currently ships as an **Agent Skill** for seamless IDE integration. Planned extensions include:
-- **Web UI**: An intuitive interface for browsing and visualizing your project's knowledge graph.
+Ourobor OS currently ships as an **Agent Skill** for seamless IDE integration, with a **Web UI** for publishing your wiki as a static site. Planned extensions include:
 - **Auxiliary Tooling**: Specialized utilities for documentation maintenance, validation, and analytics.
 - **Holistic Integration**: A unified standard for AI-assisted project management where documentation is the primary interface for both developers and agents.
 
