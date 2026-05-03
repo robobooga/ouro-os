@@ -1,6 +1,3 @@
-# Generated web output
-ouro-webui/dist/
-
 # Python cache
 __pycache__/
 *.py[cod]
