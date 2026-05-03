@@ -18,4 +18,4 @@ Thumbs.db
 .claude/
 
 # Distribution packages
-dist/
+# dist/
