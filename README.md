@@ -28,13 +28,17 @@ Ourobor OS solves these by embedding documentation into the development flow and
 
 ## 📂 Structure
 
-The project "Brain" resides in `ouro/wiki/`:
+Once installed, your project's Brain lives in `ouro/wiki/` (the distributable skeleton shipped with the package):
 - **`index.md`**: The central hub and catalog.
 - **`schema.md`**: The operating manual and Doxygen standards.
 - **`entities/`**: 1:1 mirrored documentation of your codebase.
 - **`decisions/`**: Architecture Decision Records (ADRs).
 - **`patterns/`**: Abstracted, reusable architectural logic.
 - **`capture-queue.md`**: The active capture staging area.
+
+## 🔁 Dogfooding: See It In Action
+
+The [`/wiki`](./wiki) directory at the root of this repository is Ourobor OS documenting itself — a live example of what a project Brain looks like in practice. It is the canonical knowledge store for this codebase, maintained using the same agent workflow and Doxygen protocol that ships to users. Browse it to get a concrete sense of how the system works before installing it in your own project.
 
 ## 🚀 Quick Start
 
