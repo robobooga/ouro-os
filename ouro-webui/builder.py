@@ -1,3 +1,4 @@
+import argparse
 import os
 import re
 import concurrent.futures
@@ -5,80 +6,127 @@ from pathlib import Path
 import mistune
 from jinja2 import Environment, FileSystemLoader
 
-# Paths
 BASE_DIR = Path(__file__).resolve().parent
-WIKI_DIR = BASE_DIR.parent / 'ouro' / 'wiki'
 DIST_DIR = BASE_DIR / 'dist'
 TEMPLATES_DIR = BASE_DIR / 'templates'
 
+SKIP_FILES = {'capture-queue.md', 'schema.md'}
+
+SECTION_ORDER = ['entities', 'decisions', 'patterns', 'maps']
+SECTION_LABELS = {
+    'entities': 'Entities',
+    'decisions': 'Decisions',
+    'patterns': 'Patterns',
+    'maps': 'Maps',
+}
+
+
 def parse_doxygen_tags(text):
-    # Mapping tags to HTML
     text = re.sub(r'@entity\s+(.*)', r'<div class="entity-header">Entity: \1</div>', text)
     text = re.sub(r'@brief\s+(.*)', r'<p class="brief"><strong>Brief:</strong> \1</p>', text)
     text = re.sub(r'@note\s+(.*)', r'<div class="note"><strong>Note:</strong> \1</div>', text)
     text = re.sub(r'@warning\s+(.*)', r'<div class="warning"><strong>Warning:</strong> \1</div>', text)
     return text
 
-def process_file(wiki_path):
-    # Initialize objects locally in child process
-    env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
+
+def build_nav_tree(wiki_dir):
+    """Return nav sections grouped by subdirectory, ordered by SECTION_ORDER."""
+    buckets = {s: [] for s in SECTION_ORDER}
+    root_pages = []
+
+    for root, dirs, files in os.walk(wiki_dir):
+        dirs[:] = [d for d in dirs if d not in ('dist', '.git', 'scripts')]
+        for file in sorted(files):
+            if not file.endswith('.md') or file in SKIP_FILES:
+                continue
+            path = Path(root) / file
+            rel = path.relative_to(wiki_dir)
+            parts = rel.parts
+            href = str(rel.with_suffix('.html')).replace('\\', '/')
+            label = rel.stem.replace('-', ' ').replace('_', ' ')
+
+            if len(parts) == 1:
+                root_pages.append({'label': label, 'href': href})
+            else:
+                section = parts[0]
+                if section in buckets:
+                    buckets[section].append({'label': label, 'href': href})
+
+    nav_tree = []
+    if root_pages:
+        nav_tree.append({'title': 'Wiki', 'pages': root_pages})
+    for key in SECTION_ORDER:
+        if buckets[key]:
+            nav_tree.append({'title': SECTION_LABELS[key], 'pages': buckets[key]})
+    return nav_tree
+
+
+def process_file(wiki_path, nav_tree, root_prefix):
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
     template = env.get_template('page.html')
     markdown = mistune.create_markdown(plugins=['table', 'strikethrough'])
 
     with open(wiki_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    processed_content = parse_doxygen_tags(content)
-    html_content = markdown(processed_content)
-    
-    return template.render(content=html_content)
+    processed = parse_doxygen_tags(content)
+    html_content = markdown(processed)
+    return template.render(content=html_content, nav_tree=nav_tree, root_prefix=root_prefix)
 
-def build():
-    print(f"Building Ouro Wiki Web UI from {WIKI_DIR} to {DIST_DIR}...")
-    
-    if not WIKI_DIR.exists():
-        print(f"Error: Wiki directory not found at {WIKI_DIR}")
+
+def build(wiki_dir=None):
+    if wiki_dir is None:
+        wiki_dir = BASE_DIR.parent / 'ouro' / 'wiki'
+    wiki_dir = Path(wiki_dir).resolve()
+
+    print(f"Building Ouro Wiki Web UI from {wiki_dir} to {DIST_DIR}...")
+
+    if not wiki_dir.exists():
+        print(f"Error: Wiki directory not found at {wiki_dir}")
         return
 
-    # Ensure dist exists
     DIST_DIR.mkdir(exist_ok=True)
-    
-    # Use a single persistent executor
+    nav_tree = build_nav_tree(wiki_dir)
+
     with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
-        for root, dirs, files in os.walk(WIKI_DIR):
-            if 'dist' in dirs: dirs.remove('dist')
-            if '.git' in dirs: dirs.remove('.git')
-            # Specifically ignore internal ouro directories that might be present
-            if 'scripts' in dirs: dirs.remove('scripts')
-            if 'entities' not in [os.path.basename(root)] and 'patterns' not in [os.path.basename(root)] and 'decisions' not in [os.path.basename(root)] and root != str(WIKI_DIR):
-                # This is a bit strict, let's just ignore known internal folders
-                pass
-            
+        for root, dirs, files in os.walk(wiki_dir):
+            dirs[:] = [d for d in dirs if d not in ('dist', '.git', 'scripts')]
+
             for file in files:
-                if file.endswith('.md'):
-                    wiki_path = Path(root) / file
-                    # Skip specific internal files we don't want to parse
-                    if wiki_path.name in ['capture-queue.md', 'schema.md']:
-                        continue
-                    
-                    print(f"Processing: {wiki_path.relative_to(WIKI_DIR)}")
-                    
-                    try:
-                        future = executor.submit(process_file, wiki_path)
-                        final_html = future.result(timeout=5)
-                        
-                        relative_path = wiki_path.relative_to(WIKI_DIR)
-                        output_path = DIST_DIR / relative_path.with_suffix('.html')
-                        output_path.parent.mkdir(parents=True, exist_ok=True)
-                        
-                        with open(output_path, 'w', encoding='utf-8') as f:
-                            f.write(final_html)
-                    except concurrent.futures.TimeoutError:
-                        print(f"Timeout: Skipping {wiki_path}")
-                    except Exception as e:
-                        print(f"Error processing {wiki_path}: {e}")
+                if not file.endswith('.md') or file in SKIP_FILES:
+                    continue
+
+                wiki_path = Path(root) / file
+                relative_path = wiki_path.relative_to(wiki_dir)
+                depth = len(relative_path.parts) - 1
+                root_prefix = '../' * depth
+
+                print(f"Processing: {relative_path}")
+
+                try:
+                    future = executor.submit(process_file, wiki_path, nav_tree, root_prefix)
+                    final_html = future.result(timeout=10)
+
+                    output_path = DIST_DIR / relative_path.with_suffix('.html')
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+                    with open(output_path, 'w', encoding='utf-8') as f:
+                        f.write(final_html)
+                except concurrent.futures.TimeoutError:
+                    print(f"Timeout: Skipping {wiki_path}")
+                except Exception as e:
+                    print(f"Error processing {wiki_path}: {e}")
 
     print("Build complete.")
 
+
 if __name__ == '__main__':
-    build()
+    parser = argparse.ArgumentParser(description='Build Ouro Wiki Web UI')
+    parser.add_argument(
+        '--wiki-dir',
+        type=Path,
+        default=BASE_DIR.parent / 'ouro' / 'wiki',
+        help='Path to the wiki directory to build from (default: ../ouro/wiki)',
+    )
+    args = parser.parse_args()
+    build(wiki_dir=args.wiki_dir)
