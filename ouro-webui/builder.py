@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+import shutil
 import concurrent.futures
 from pathlib import Path
 import mistune
@@ -99,6 +100,7 @@ def build(wiki_dir=None):
         return
 
     DIST_DIR.mkdir(exist_ok=True)
+    shutil.copy(BASE_DIR / 'static' / 'style.css', DIST_DIR / 'style.css')
     nav_tree = build_nav_tree(wiki_dir)
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
