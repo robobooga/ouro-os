@@ -80,6 +80,12 @@ def process_file(wiki_path, nav_tree, root_prefix):
 
     processed = parse_doxygen_tags(content)
     html_content = markdown(processed)
+    skip_pattern = '|'.join(re.escape(f) for f in SKIP_FILES)
+    html_content = re.sub(
+        rf'<a\b[^>]*href="[^"]*(?:{skip_pattern})"[^>]*>(.*?)</a>',
+        r'\1',
+        html_content,
+    )
     html_content = re.sub(
         r'href="([^"]*?)\.md(#[^"]*?)?"',
         lambda m: f'href="{m.group(1)}.html{m.group(2) or ""}"',
