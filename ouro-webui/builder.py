@@ -22,10 +22,18 @@ SECTION_LABELS = {
 
 
 def parse_doxygen_tags(text):
-    text = re.sub(r'@entity\s+(.*)', r'<div class="entity-header">Entity: \1</div>', text)
-    text = re.sub(r'@brief\s+(.*)', r'<p class="brief"><strong>Brief:</strong> \1</p>', text)
-    text = re.sub(r'@note\s+(.*)', r'<div class="note"><strong>Note:</strong> \1</div>', text)
-    text = re.sub(r'@warning\s+(.*)', r'<div class="warning"><strong>Warning:</strong> \1</div>', text)
+    _md = mistune.create_markdown(escape=False, plugins=['table', 'strikethrough'])
+
+    def _inline(raw):
+        rendered = _md(raw).strip()
+        if rendered.startswith('<p>') and rendered.endswith('</p>'):
+            rendered = rendered[3:-4]
+        return rendered
+
+    text = re.sub(r'@entity\s+(.*)', lambda m: f'<div class="entity-header">Entity: {_inline(m.group(1))}</div>', text)
+    text = re.sub(r'@brief\s+(.*)', lambda m: f'<p class="brief"><strong>Brief:</strong> {_inline(m.group(1))}</p>', text)
+    text = re.sub(r'@note\s+(.*)', lambda m: f'<div class="note"><strong>Note:</strong> {_inline(m.group(1))}</div>', text)
+    text = re.sub(r'@warning\s+(.*)', lambda m: f'<div class="warning"><strong>Warning:</strong> {_inline(m.group(1))}</div>', text)
     return text
 
 
