@@ -60,6 +60,8 @@ python ouro-webui/builder.py --wiki-dir ./wiki
 
 The [`/wiki`](./wiki) directory at the root of this repository is Ourobor OS documenting itself — a live example of what a project Brain looks like in practice. It is the canonical knowledge store for this codebase, maintained using the same agent workflow and Doxygen protocol that ships to users. Browse the [live site](https://nick-tan.com/ourobor-os/) or the raw Markdown to get a concrete sense of how the system works before installing it in your own project.
 
+> **Note:** Because the wiki is generated and maintained by an LLM, the structure, depth, and formatting of your own wiki will naturally differ from the live demo. Every project's brain grows organically — shaped by the codebase, the agent's synthesis decisions, and the information fed into the capture queue. The live demo is a reference point, not a template to match exactly.
+
 ## 🚀 Quick Start
 
 ### 1. Installation
