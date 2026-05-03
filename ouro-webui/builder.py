@@ -83,7 +83,7 @@ def process_file(wiki_path, nav_tree, root_prefix):
     skip_pattern = '|'.join(re.escape(f) for f in SKIP_FILES)
     html_content = re.sub(
         rf'<a\b[^>]*href="[^"]*({skip_pattern})"[^>]*>.*?</a>',
-        r'\1',
+        r'<code>\1</code>',
         html_content,
     )
     html_content = re.sub(
