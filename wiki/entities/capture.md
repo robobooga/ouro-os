@@ -28,6 +28,17 @@ If the queue contains `*(Empty)*`, it is removed before appending.
 
 Walks all non-binary files and calls `stage()` on each, skipping ignored directories, sensitive files, and the `ouro/wiki/` directory itself to avoid recursive capture. Reports a count of staged files and separately a count of skipped sensitive files.
 
+### `get_git_changed_files(depth=1)`
+@param depth Number of commits to look back for changed files. Defaults to `1`.
+
+Runs four git commands to collect the full set of recently touched files: unstaged tracked changes (`git diff --name-only`), staged changes (`git diff --name-only --cached`), untracked new files (`git ls-files --others --exclude-standard`), and files changed in the last `depth` commits (`git diff --name-only HEAD~{depth} HEAD`). Returns a set of resolved absolute `Path` objects. Silently skips any command that fails (e.g. git not installed, not a repo).
+
+### `crawl_git(directory, depth=1)`
+@param directory Root directory to restrict results to. Defaults to `.` via CLI.
+@param depth Passed through to `get_git_changed_files()`.
+
+Git-aware alternative to `crawl()`. Calls `get_git_changed_files()` to determine which files to stage, then applies the same sensitivity, binary, and ignore-list filters as `crawl()`. Only files within `directory` are staged. Recommended for ongoing sessions where the wiki already exists — avoids re-queuing unchanged files.
+
 **Module-level constants** (edit in `capture.py` to customise for your project):
 
 - **`IGNORED_DIRS`** — directory names that cause an entire subtree to be skipped. Covers version control, Python/JS/Go/Rust/JVM build and cache directories, infrastructure state (`.terraform`), and credential directories (`.aws`, `.ssh`, `secrets`, `certs`, `vault`, etc.).
@@ -59,7 +70,13 @@ python ouro/scripts/capture.py path/to/file.py
 # Stage a raw architectural note
 python ouro/scripts/capture.py "Decision: use composition over inheritance in the plugin loader."
 
-# Crawl the whole project
+# Crawl only git-changed files (recommended after initial setup)
+python ouro/scripts/capture.py --crawl --git
+
+# Include last N commits' worth of changes
+python ouro/scripts/capture.py --crawl --git 3
+
+# Crawl the whole project (use for initial wiki population)
 python ouro/scripts/capture.py --crawl
 
 # Crawl a specific directory
@@ -76,3 +93,4 @@ python ouro/scripts/capture.py --pop
 - No `--status` subcommand to show queue length or last capture timestamp.
 - `IGNORED_DIRS` and `SENSITIVE_*` constants are not user-configurable via CLI flags — editing the source file is required.
 - No deduplication — staging the same file twice creates duplicate entries.
+- `--git` depth uses `HEAD~{depth}` which fails gracefully (silent skip) when the repo has fewer commits than `depth`; the working-tree commands still run.

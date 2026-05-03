@@ -2,6 +2,23 @@
 
 You are responsible for maintaining the project's **LLM Wiki** in `ouro/wiki/`.
 
+### 0. Session Start
+
+Before doing any work, check whether the wiki has already been populated:
+
+- **Initial setup** (no entity files in `ouro/wiki/entities/`): run a full crawl to bootstrap the wiki.
+  ```bash
+  python <path-to-skill>/scripts/capture.py --crawl
+  ```
+- **Ongoing sessions** (wiki already exists — drift correction): run a git-aware crawl to stage only recently changed files. This is cheaper and avoids bloating the queue with unchanged code.
+  ```bash
+  python <path-to-skill>/scripts/capture.py --crawl --git
+  ```
+  To include files from the last N commits (e.g. if you want to catch changes from earlier in the week):
+  ```bash
+  python <path-to-skill>/scripts/capture.py --crawl --git 3
+  ```
+
 ### 1. Monitor & Synthesize
 - **Monitor**: Regularly check `ouro/wiki/capture-queue.md` for new snippets.
 - **Synthesize**: Move snippets into appropriate `ouro/wiki/entities/`, `ouro/wiki/patterns/`, or `ouro/wiki/maps/` files using **Doxygen** tags (`@entity`, `@brief`, `@snippet`).

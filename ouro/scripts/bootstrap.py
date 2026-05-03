@@ -72,6 +72,20 @@ def bootstrap():
 
 You are responsible for maintaining the project's **LLM Wiki** in the `ouro/wiki/` directory.
 
+### 0. Session Start
+
+Before doing any work, check whether the wiki has already been populated:
+
+- **Initial setup** (no entity files in `ouro/wiki/entities/`): run a full crawl.
+  ```bash
+  python <path-to-skill>/scripts/capture.py --crawl
+  ```
+- **Ongoing sessions** (wiki already exists): run a git-aware crawl to stage only recently changed files.
+  ```bash
+  python <path-to-skill>/scripts/capture.py --crawl --git
+  ```
+  To include files from the last N commits: `--crawl --git N` (e.g. `--crawl --git 3`).
+
 ### 1. Monitor the Capture Queue
 - Regularly read `ouro/wiki/capture-queue.md` using your file reading tool.
 - When new snippets are found, "Synthesize" them into the appropriate `ouro/wiki/entities/`, `ouro/wiki/patterns/`, or `ouro/wiki/maps/` files.

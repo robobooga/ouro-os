@@ -92,7 +92,13 @@ python <your-project>/ouro/scripts/bootstrap.py
 The capture script acts as a staging bridge. When run, it identifies your target code or notes and automatically appends them to `ouro/wiki/capture-queue.md`. It uses a safe, append-only operation that prevents loss of previous captures. Once staged, your LLM agent will notice the new entries in the queue during its next maintenance pass, synthesize the raw information into formatted documentation, and move the finalized content into the appropriate `ouro/wiki/` subdirectories.
 
 ```bash
-# Crawl entire project
+# Crawl only git-changed files (recommended after initial setup)
+python <path-to-skill>/scripts/capture.py --crawl --git
+
+# Include last N commits' worth of changes
+python <path-to-skill>/scripts/capture.py --crawl --git 3
+
+# Crawl entire project (use for initial wiki population)
 python <path-to-skill>/scripts/capture.py --crawl
 
 # Capture specific directory

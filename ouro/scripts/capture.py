@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -132,6 +133,67 @@ def is_sensitive(file_path: Path) -> bool:
     return False
 
 
+def get_git_changed_files(depth=1):
+    """Returns a set of absolute Paths for files touched by git (working tree + recent commits)."""
+    cwd = Path.cwd()
+    files = set()
+    commands = [
+        ['git', 'diff', '--name-only'],
+        ['git', 'diff', '--name-only', '--cached'],
+        ['git', 'ls-files', '--others', '--exclude-standard'],
+        ['git', 'diff', '--name-only', f'HEAD~{depth}', 'HEAD'],
+    ]
+    for cmd in commands:
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
+            if result.returncode == 0:
+                files.update(f.strip() for f in result.stdout.splitlines() if f.strip())
+        except Exception:
+            continue
+    return {(cwd / f).resolve() for f in files}
+
+
+def crawl_git(directory, depth=1):
+    """Crawls only git-changed files within directory."""
+    dir_path = Path(directory).resolve()
+    changed = get_git_changed_files(depth=depth)
+
+    if not changed:
+        print('No git-changed files found. Is this a git repo with recent changes?')
+        return
+
+    print(f'Git-aware crawl ({len(changed)} changed file(s) detected)...')
+    count = 0
+    skipped_sensitive = 0
+    wiki_path = PROJECT_ROOT / 'ouro' / 'wiki'
+
+    for file_path in changed:
+        try:
+            file_path.relative_to(dir_path)
+        except ValueError:
+            continue
+
+        if wiki_path in file_path.parents or file_path.parent == wiki_path:
+            continue
+        if any(part in IGNORED_DIRS for part in file_path.parts):
+            continue
+        if not file_path.is_file():
+            continue
+        if is_sensitive(file_path):
+            skipped_sensitive += 1
+            continue
+        if is_binary(file_path):
+            continue
+
+        try:
+            stage(str(file_path))
+            count += 1
+        except Exception as e:
+            print(f'Skipping file "{file_path}": {e}')
+
+    print(f'Git-aware crawl complete. Staged {count} files. Skipped {skipped_sensitive} sensitive file(s).')
+
+
 def crawl(directory):
     """Crawls a directory for files containing Doxygen tags."""
     dir_path = Path(directory).resolve()
@@ -238,8 +300,18 @@ def main():
     arg1 = sys.argv[1]
 
     if arg1 == '--crawl':
-        directory = sys.argv[2] if len(sys.argv) > 2 else '.'
-        crawl(directory)
+        rest = sys.argv[2:]
+        use_git = '--git' in rest
+        git_depth = 1
+        if use_git:
+            rest = [a for a in rest if a != '--git']
+            if rest and rest[0].isdigit():
+                git_depth = int(rest.pop(0))
+        directory = rest[0] if rest else '.'
+        if use_git:
+            crawl_git(directory, depth=git_depth)
+        else:
+            crawl(directory)
     elif arg1 == '--pop':
         pop()
     else:

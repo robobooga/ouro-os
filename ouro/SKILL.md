@@ -39,7 +39,13 @@ Once initialized, your LLM agent is responsible for maintaining the wiki.
 Use the capture script to stage important code snippets or architectural notes to the wiki queue:
 
 ```bash
-# Crawl the whole project (excluding ignore list)
+# Crawl only git-changed files (recommended after initial setup)
+python <path-to-skill>/scripts/capture.py --crawl --git
+
+# Include last N commits' worth of changes
+python <path-to-skill>/scripts/capture.py --crawl --git 3
+
+# Crawl the whole project (use for initial wiki population)
 python <path-to-skill>/scripts/capture.py --crawl
 
 # Crawl a specific directory

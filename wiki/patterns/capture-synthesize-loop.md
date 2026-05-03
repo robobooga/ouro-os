@@ -45,7 +45,7 @@ The capture-synthesize loop is the central operational pattern of Ourobor OS. It
 - After writing or significantly refactoring a module
 - When making an architectural decision worth preserving
 - When identifying a reusable pattern
-- At the start of a session (`--crawl` to catch drift since last session)
+- At the start of a session — use `--crawl --git` to catch drift on recently touched files; use bare `--crawl` only for initial wiki population
 - Before a release (verify parity between code and wiki)
 
 ## Synthesis Guidelines
