@@ -3,7 +3,7 @@
 
 ## Overview
 
-`ouro-webui/builder.py` walks a wiki directory (default: `ouro/wiki/`), processes Doxygen tags via regex, renders Markdown to HTML using `mistune`, and writes output to `ouro-webui/dist/`, preserving the wiki's subdirectory structure. Each page includes a sidebar with links to all wiki pages grouped by section (Entities, Decisions, Patterns, Maps).
+`ouro-webui/builder.py` walks a wiki directory (default: `ouro/wiki/`), processes Doxygen tags via regex, renders Markdown to HTML using `mistune`, and writes output to `ouro-webui/dist/`, preserving the wiki's subdirectory structure. Each page includes a sidebar with links to all wiki pages grouped by section (Entities, Decisions, Patterns, Maps). Sections with more than 20 links render as a collapsible `<details>` element; the active page's section auto-opens via a small inline script.
 
 @note The web UI is a separate concern from the core skill and is not included in the distributed `ouro/` package. See [ADR-004](../decisions/ADR-004-webui-as-separate-concern.md).
 

@@ -10,14 +10,36 @@
     <nav class="sidebar">
         <a class="home-link" href="{{ root_prefix }}index.html">Home</a>
         {% for section in nav_tree %}
-        <h4>{{ section.title }}</h4>
-        {% for page in section.pages %}
-        <a href="{{ root_prefix }}{{ page.href }}">{{ page.label }}</a>
-        {% endfor %}
+        {% if section.pages | length > 20 %}
+        <details class="nav-section">
+            <summary>{{ section.title }}</summary>
+            {% for page in section.pages %}
+            <a href="{{ root_prefix }}{{ page.href }}">{{ page.label }}</a>
+            {% endfor %}
+        </details>
+        {% else %}
+        <div class="nav-section">
+            <h4>{{ section.title }}</h4>
+            {% for page in section.pages %}
+            <a href="{{ root_prefix }}{{ page.href }}">{{ page.label }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
         {% endfor %}
     </nav>
     <main>
         {% block content %}{% endblock %}
     </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var path = window.location.pathname;
+        document.querySelectorAll('details.nav-section a').forEach(function(a) {
+            var href = a.getAttribute('href').replace(/^(\.\.\/)+/, '');
+            if (path.endsWith('/' + href) || path === href) {
+                a.closest('details').open = true;
+            }
+        });
+    });
+</script>
 </body>
 </html>

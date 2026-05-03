@@ -19,6 +19,7 @@ This is the internal documentation for the Ourobor OS project. It also serves as
 - [ADR-003](decisions/ADR-003-doxygen-tags-in-markdown.md) — Doxygen tags embedded in Markdown.
 - [ADR-004](decisions/ADR-004-webui-as-separate-concern.md) — Web UI decoupled from core skill.
 - [ADR-005](decisions/ADR-005-crawl-sensitive-file-guard.md) — `--crawl` guards against staging secrets and credential files.
+- [ADR-006](decisions/ADR-006-collapsible-sidebar-sections.md) — Sidebar sections with >20 links collapse via `<details>/<summary>`.
 
 ## Patterns
 - [Capture-Synthesize Loop](patterns/capture-synthesize-loop.md) — The core knowledge accumulation workflow.
