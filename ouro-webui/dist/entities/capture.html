@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ourobor OS Wiki</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar a { display: block; color: #333; text-decoration: none; padding: 2px 0; font-size: 0.9em; }
+        .sidebar a:hover { color: #1976d2; }
+        .sidebar h4 { margin: 16px 0 4px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+        .sidebar .home-link { font-weight: bold; margin-bottom: 12px; font-size: 1em; }
+        main { flex: 1; padding: 24px 32px; max-width: 860px; }
+        .entity-header { font-size: 1.5em; font-weight: bold; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        .brief { font-style: italic; color: #555; }
+        .note, .warning { padding: 10px; border-left: 5px solid; margin: 10px 0; }
+        .note { border-color: #2196F3; background: #e3f2fd; }
+        .warning { border-color: #f44336; background: #ffebee; }
+        @media (max-width: 640px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid #ddd; }
+            main { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <a class="home-link" href="../index.html">Home</a>
+        
+        <h4>Wiki</h4>
+        
+        <a href="../index.html">index</a>
+        
+        
+        <h4>Entities</h4>
+        
+        <a href="../entities/bootstrap.html">bootstrap</a>
+        
+        <a href="../entities/builder.html">builder</a>
+        
+        <a href="../entities/capture.html">capture</a>
+        
+        <a href="../entities/package.html">package</a>
+        
+        
+        <h4>Decisions</h4>
+        
+        <a href="../decisions/ADR-001-ouro-as-distributable-skeleton.html">ADR 001 ouro as distributable skeleton</a>
+        
+        <a href="../decisions/ADR-002-wiki-as-dual-purpose.html">ADR 002 wiki as dual purpose</a>
+        
+        <a href="../decisions/ADR-003-doxygen-tags-in-markdown.html">ADR 003 doxygen tags in markdown</a>
+        
+        <a href="../decisions/ADR-004-webui-as-separate-concern.html">ADR 004 webui as separate concern</a>
+        
+        
+        <h4>Patterns</h4>
+        
+        <a href="../patterns/capture-synthesize-loop.html">capture synthesize loop</a>
+        
+        
+        <h4>Maps</h4>
+        
+        <a href="../maps/project-roadmap.html">project roadmap</a>
+        
+        <a href="../maps/system-architecture.html">system architecture</a>
+        
+        
+    </nav>
+    <main>
+        
+    <div class="entity-header">Entity: capture</div>
+<p class="brief"><strong>Brief:</strong> Manages the capture queue — staging, crawling, and popping knowledge entries for LLM synthesis.</p>
+
+<h2>Overview</h2>
+<p><code>ouro/scripts/capture.py</code> is the primary knowledge ingestion tool. It reads code and notes into <code>ouro/wiki/capture-queue.md</code> for later synthesis by an LLM agent. It is the entry point to the <a href="../patterns/capture-synthesize-loop.html">Capture-Synthesize Loop</a>.</p>
+<h2>Functions</h2>
+<h3><code>stage(input_str)</code></h3>
+<p>@param input_str A file path or raw text string.</p>
+<p>Appends a timestamped entry to the capture queue. If a valid file path is given, reads its content; otherwise treats the input as a raw snippet. Handles binary file detection and encoding errors gracefully.</p>
+<p>@snippet stage-entry-format</p>
+<pre><code>### Capture [2026-05-03T10:00:00]
+- **Source**: `ouro/scripts/capture.py`
+- **Content**:
+```&lt;content&gt;```
+---
+</code></pre>
+<p>If the queue contains <code>*(Empty)*</code>, it is removed before appending.</p>
+<h3><code>crawl(directory)</code></h3>
+<p>@param directory Root directory to walk recursively. Defaults to <code>.</code> via CLI.</p>
+<p>Walks all non-binary files and calls <code>stage()</code> on each, skipping ignored directories and the <code>ouro/wiki/</code> directory itself to avoid recursive capture.</p>
+<p><strong>Hardcoded ignored directories</strong>: <code>.git</code>, <code>node_modules</code>, <code>__pycache__</code>, <code>.venv</code>, <code>dist</code>, <code>build</code>, <code>.next</code>, <code>ouro</code>, <code>dist-skill</code></p>
+<div class="warning"><strong>Warning:</strong> Currently stages every text file including config files, dotfiles, and lock files. No smart filtering exists — the LLM must triage noise from the queue manually. A configurable exclusion list and `--status` command are known missing features.</div>
+
+<h3><code>pop()</code></h3>
+<p>Reads and prints the first <code>### Capture [...]</code> entry from the queue, removes it, and rewrites the file. If no entries remain, restores the <code>*(Empty)*</code> marker. Used by the LLM agent to process one entry at a time during synthesis.</p>
+<h3><code>is_binary(file_path)</code></h3>
+<p>Heuristic check — reads the first 1024 bytes of a file and returns <code>True</code> if a null byte is found.</p>
+<h2>CLI Usage</h2>
+<pre><code class="language-bash"># Stage a specific file
+python ouro/scripts/capture.py path/to/file.py
+
+# Stage a raw architectural note
+python ouro/scripts/capture.py &quot;Decision: use composition over inheritance in the plugin loader.&quot;
+
+# Crawl the whole project
+python ouro/scripts/capture.py --crawl
+
+# Crawl a specific directory
+python ouro/scripts/capture.py --crawl src/
+
+# Pop the first entry from the queue (used during synthesis)
+python ouro/scripts/capture.py --pop
+</code></pre>
+<div class="note"><strong>Note:</strong> `QUEUE_PATH` is resolved relative to `Path.cwd()`, so the script must be run from the project root.</div>
+
+<h2>Known Gaps</h2>
+<ul>
+<li>No <code>--status</code> subcommand to show queue length or last capture timestamp.</li>
+<li><code>--crawl</code> has no user-configurable exclusion list.</li>
+<li>No deduplication — staging the same file twice creates duplicate entries.</li>
+</ul>
+
+
+    </main>
+</body>
+</html>

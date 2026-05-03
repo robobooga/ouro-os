@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ourobor OS Wiki</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar a { display: block; color: #333; text-decoration: none; padding: 2px 0; font-size: 0.9em; }
+        .sidebar a:hover { color: #1976d2; }
+        .sidebar h4 { margin: 16px 0 4px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+        .sidebar .home-link { font-weight: bold; margin-bottom: 12px; font-size: 1em; }
+        main { flex: 1; padding: 24px 32px; max-width: 860px; }
+        .entity-header { font-size: 1.5em; font-weight: bold; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        .brief { font-style: italic; color: #555; }
+        .note, .warning { padding: 10px; border-left: 5px solid; margin: 10px 0; }
+        .note { border-color: #2196F3; background: #e3f2fd; }
+        .warning { border-color: #f44336; background: #ffebee; }
+        @media (max-width: 640px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid #ddd; }
+            main { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <a class="home-link" href="../index.html">Home</a>
+        
+        <h4>Wiki</h4>
+        
+        <a href="../index.html">index</a>
+        
+        
+        <h4>Entities</h4>
+        
+        <a href="../entities/bootstrap.html">bootstrap</a>
+        
+        <a href="../entities/builder.html">builder</a>
+        
+        <a href="../entities/capture.html">capture</a>
+        
+        <a href="../entities/package.html">package</a>
+        
+        
+        <h4>Decisions</h4>
+        
+        <a href="../decisions/ADR-001-ouro-as-distributable-skeleton.html">ADR 001 ouro as distributable skeleton</a>
+        
+        <a href="../decisions/ADR-002-wiki-as-dual-purpose.html">ADR 002 wiki as dual purpose</a>
+        
+        <a href="../decisions/ADR-003-doxygen-tags-in-markdown.html">ADR 003 doxygen tags in markdown</a>
+        
+        <a href="../decisions/ADR-004-webui-as-separate-concern.html">ADR 004 webui as separate concern</a>
+        
+        
+        <h4>Patterns</h4>
+        
+        <a href="../patterns/capture-synthesize-loop.html">capture synthesize loop</a>
+        
+        
+        <h4>Maps</h4>
+        
+        <a href="../maps/project-roadmap.html">project roadmap</a>
+        
+        <a href="../maps/system-architecture.html">system architecture</a>
+        
+        
+    </nav>
+    <main>
+        
+    <div class="entity-header">Entity: SystemArchitecture</div>
+<p class="brief"><strong>Brief:</strong> High-level component map of the Ourobor OS project — what exists, where it lives, and what is included in the distributed package.</p>
+
+<h2>Component Map</h2>
+<pre><code>ourobor-os/
+│
+├── ouro/                          [Distributable Skill Package]  ← shipped to users
+│   ├── SKILL.md                   npx skills entry point &amp; description
+│   ├── AGENT_PROTOCOL.md          LLM maintenance protocol (appended by bootstrap.py)
+│   ├── README.md                  Skill-level quick start
+│   ├── scripts/
+│   │   ├── capture.py             Knowledge ingestion tooling
+│   │   └── bootstrap.py           One-time project initialization
+│   └── wiki/                      Clean skeleton — empty subdirs only
+│       ├── index.md               Template hub
+│       ├── schema.md              Template schema
+│       ├── capture-queue.md       Template queue (empty)
+│       ├── entities/              .gitkeep
+│       ├── decisions/             .gitkeep
+│       ├── patterns/              .gitkeep
+│       └── maps/                  .gitkeep
+│
+├── wiki/                          [Project Brain + Reference Example]  ← this directory
+│   ├── index.md                   Project wiki hub
+│   ├── schema.md                  Doxygen protocol reference
+│   ├── capture-queue.md           Active staging area
+│   ├── entities/                  Module docs (capture, bootstrap, builder, package)
+│   ├── decisions/                 ADRs (001–004)
+│   ├── patterns/                  Capture-synthesize loop
+│   └── maps/                      This file
+│
+├── ouro-webui/                    [Web UI — Separate Concern]  ← not in package
+│   ├── builder.py                 Markdown → HTML static site generator
+│   ├── requirements.txt           mistune, jinja2
+│   ├── templates/
+│   │   ├── base.html              Base layout (has known template inheritance bug)
+│   │   └── page.html              Per-page template
+│   └── dist/                      Generated HTML output (gitignored)
+│
+├── scripts/
+│   └── package.py                 Packages ouro/ → dist/ouro-skill.zip
+│
+├── docs/
+│   └── PLAN.md                    Original planning document
+│
+└── dist/
+    └── ouro-skill.zip             Distribution artifact
+</code></pre>
+<h2>Data Flow</h2>
+<pre><code>Developer's codebase
+        |
+        | python ouro/scripts/capture.py --crawl
+        v
+ouro/wiki/capture-queue.md
+        |
+        | LLM synthesizes during active session
+        v
+ouro/wiki/entities/ | patterns/ | decisions/
+        |
+        | (optional) python ouro-webui/builder.py
+        v
+ouro-webui/dist/*.html             browsable dashboard
+
+        | python scripts/package.py
+        v
+dist/ouro-skill.zip                → npx skills / direct download → user projects
+</code></pre>
+<h2>Separation of Concerns</h2>
+<table>
+<thead>
+<tr>
+  <th>Directory</th>
+  <th>Purpose</th>
+  <th>In Package</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ouro/</code></td>
+  <td>Distributable skill skeleton</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td><code>wiki/</code></td>
+  <td>Project documentation + example</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><code>ouro-webui/</code></td>
+  <td>Optional web rendering layer</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><code>scripts/</code></td>
+  <td>Release tooling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><code>dist/</code></td>
+  <td>Build artifacts</td>
+  <td>No</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../decisions/ADR-001-ouro-as-distributable-skeleton.html">ADR-001</a> and <a href="../decisions/ADR-002-wiki-as-dual-purpose.html">ADR-002</a> for the reasoning behind the <code>ouro/</code> vs <code>wiki/</code> separation.</p>
+
+
+    </main>
+</body>
+</html>

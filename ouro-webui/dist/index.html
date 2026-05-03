@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ourobor OS Wiki</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar a { display: block; color: #333; text-decoration: none; padding: 2px 0; font-size: 0.9em; }
+        .sidebar a:hover { color: #1976d2; }
+        .sidebar h4 { margin: 16px 0 4px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+        .sidebar .home-link { font-weight: bold; margin-bottom: 12px; font-size: 1em; }
+        main { flex: 1; padding: 24px 32px; max-width: 860px; }
+        .entity-header { font-size: 1.5em; font-weight: bold; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        .brief { font-style: italic; color: #555; }
+        .note, .warning { padding: 10px; border-left: 5px solid; margin: 10px 0; }
+        .note { border-color: #2196F3; background: #e3f2fd; }
+        .warning { border-color: #f44336; background: #ffebee; }
+        @media (max-width: 640px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid #ddd; }
+            main { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <a class="home-link" href="index.html">Home</a>
+        
+        <h4>Wiki</h4>
+        
+        <a href="index.html">index</a>
+        
+        
+        <h4>Entities</h4>
+        
+        <a href="entities/bootstrap.html">bootstrap</a>
+        
+        <a href="entities/builder.html">builder</a>
+        
+        <a href="entities/capture.html">capture</a>
+        
+        <a href="entities/package.html">package</a>
+        
+        
+        <h4>Decisions</h4>
+        
+        <a href="decisions/ADR-001-ouro-as-distributable-skeleton.html">ADR 001 ouro as distributable skeleton</a>
+        
+        <a href="decisions/ADR-002-wiki-as-dual-purpose.html">ADR 002 wiki as dual purpose</a>
+        
+        <a href="decisions/ADR-003-doxygen-tags-in-markdown.html">ADR 003 doxygen tags in markdown</a>
+        
+        <a href="decisions/ADR-004-webui-as-separate-concern.html">ADR 004 webui as separate concern</a>
+        
+        
+        <h4>Patterns</h4>
+        
+        <a href="patterns/capture-synthesize-loop.html">capture synthesize loop</a>
+        
+        
+        <h4>Maps</h4>
+        
+        <a href="maps/project-roadmap.html">project roadmap</a>
+        
+        <a href="maps/system-architecture.html">system architecture</a>
+        
+        
+    </nav>
+    <main>
+        
+    <h1>Ourobor OS: Project Wiki</h1>
+<p>This is the internal documentation for the Ourobor OS project. It also serves as a reference example for users of the skill — this is what a populated <code>ouro/wiki/</code> looks like in practice.</p>
+<blockquote>
+<p>The distributable skill package lives in <code>ouro/</code>. This <code>wiki/</code> directory documents the Ourobor OS project itself and mirrors the structure users receive when they run <code>bootstrap.py</code>. See <a href="decisions/ADR-002-wiki-as-dual-purpose.html">ADR-002</a>.</p>
+</blockquote>
+<h2>Core Documentation</h2>
+<ul>
+<li><a href="schema.html">Wiki Schema</a> — Doxygen protocol and maintenance rules.</li>
+</ul>
+<h2>Entities</h2>
+<ul>
+<li><a href="entities/capture.html">capture.py</a> — Capture queue management and crawl tooling.</li>
+<li><a href="entities/bootstrap.html">bootstrap.py</a> — Project initialization and LLM environment detection.</li>
+<li><a href="entities/builder.html">builder.py</a> — Static site generator for the wiki web UI.</li>
+<li><a href="entities/package.html">package.py</a> — Distribution packager for the <code>ouro</code> skill.</li>
+</ul>
+<h2>Architecture Decisions</h2>
+<ul>
+<li><a href="decisions/ADR-001-ouro-as-distributable-skeleton.html">ADR-001</a> — <code>ouro/</code> is the distributable skeleton, not project docs.</li>
+<li><a href="decisions/ADR-002-wiki-as-dual-purpose.html">ADR-002</a> — <code>wiki/</code> serves as both internal docs and reference example.</li>
+<li><a href="decisions/ADR-003-doxygen-tags-in-markdown.html">ADR-003</a> — Doxygen tags embedded in Markdown.</li>
+<li><a href="decisions/ADR-004-webui-as-separate-concern.html">ADR-004</a> — Web UI decoupled from core skill.</li>
+</ul>
+<h2>Patterns</h2>
+<ul>
+<li><a href="patterns/capture-synthesize-loop.html">Capture-Synthesize Loop</a> — The core knowledge accumulation workflow.</li>
+</ul>
+<h2>Maps</h2>
+<ul>
+<li><a href="maps/system-architecture.html">System Architecture</a> — Component relationships and data flows.</li>
+<li><a href="maps/project-roadmap.html">Project Roadmap</a> — Phased development plan and current status.</li>
+</ul>
+<h2>Capture Queue</h2>
+<ul>
+<li><a href="capture-queue.html">Capture Queue</a></li>
+</ul>
+
+
+    </main>
+</body>
+</html>
