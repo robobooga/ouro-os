@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ourobor OS Wiki</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar a { display: block; color: #333; text-decoration: none; padding: 2px 0; font-size: 0.9em; }
+        .sidebar a:hover { color: #1976d2; }
+        .sidebar h4 { margin: 16px 0 4px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+        .sidebar .home-link { font-weight: bold; margin-bottom: 12px; font-size: 1em; }
+        main { flex: 1; padding: 24px 32px; max-width: 860px; }
+        .entity-header { font-size: 1.5em; font-weight: bold; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        .brief { font-style: italic; color: #555; }
+        .note, .warning { padding: 10px; border-left: 5px solid; margin: 10px 0; }
+        .note { border-color: #2196F3; background: #e3f2fd; }
+        .warning { border-color: #f44336; background: #ffebee; }
+        @media (max-width: 640px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid #ddd; }
+            main { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <a class="home-link" href="../index.html">Home</a>
+        
+        <h4>Wiki</h4>
+        
+        <a href="../index.html">index</a>
+        
+        
+        <h4>Entities</h4>
+        
+        <a href="../entities/bootstrap.html">bootstrap</a>
+        
+        <a href="../entities/builder.html">builder</a>
+        
+        <a href="../entities/capture.html">capture</a>
+        
+        <a href="../entities/package.html">package</a>
+        
+        
+        <h4>Decisions</h4>
+        
+        <a href="../decisions/ADR-001-ouro-as-distributable-skeleton.html">ADR 001 ouro as distributable skeleton</a>
+        
+        <a href="../decisions/ADR-002-wiki-as-dual-purpose.html">ADR 002 wiki as dual purpose</a>
+        
+        <a href="../decisions/ADR-003-doxygen-tags-in-markdown.html">ADR 003 doxygen tags in markdown</a>
+        
+        <a href="../decisions/ADR-004-webui-as-separate-concern.html">ADR 004 webui as separate concern</a>
+        
+        
+        <h4>Patterns</h4>
+        
+        <a href="../patterns/capture-synthesize-loop.html">capture synthesize loop</a>
+        
+        
+        <h4>Maps</h4>
+        
+        <a href="../maps/project-roadmap.html">project roadmap</a>
+        
+        <a href="../maps/system-architecture.html">system architecture</a>
+        
+        
+    </nav>
+    <main>
+        
+    <div class="entity-header">Entity: ADR-003</div>
+<p class="brief"><strong>Brief:</strong> Custom Doxygen-style tags embedded in plain Markdown are the documentation protocol for all wiki files.</p>
+
+<h2>Context</h2>
+<p>The wiki needs a documentation standard that satisfies two audiences simultaneously: human developers reading Markdown files directly in editors or on GitHub, and LLM agents parsing files for structured information. Additionally, <code>builder.py</code> needs a machine-readable hook to apply custom rendering beyond standard Markdown.</p>
+<h2>Decision</h2>
+<p>Custom Doxygen-style tags (<code>@entity</code>, <code>@brief</code>, <code>@snippet</code>, <code>@note</code>, <code>@warning</code>, <code>@param</code>, <code>@return</code>) are embedded inline in standard Markdown files. These are not standard Doxygen — they are a lightweight convention unique to Ourobor OS.</p>
+<p><code>builder.py</code> uses regex substitution to convert tags into styled HTML before passing content to <code>mistune</code> for Markdown rendering.</p>
+<h2>Alternatives Considered</h2>
+<ul>
+<li><strong>Pure Markdown with headers only</strong>: No structured signals for tooling. LLMs parse it fine, but the web UI would have no hook for semantic rendering without reinventing a tagging system.</li>
+<li><strong>Real Doxygen</strong>: Requires a full Doxygen installation, produces XML or HTML rather than portable Markdown, and is far too heavy for a drop-in skill with zero tooling dependencies.</li>
+<li><strong>YAML frontmatter</strong>: Well-supported and standard (Jekyll, Hugo, etc.), but frontmatter is per-file metadata — it can't tag individual sections like <code>@snippet</code> or <code>@warning</code> mid-document.</li>
+<li><strong>JSON sidecar files</strong>: Maximum machine-readability, minimum human-readability. Violates the &quot;dual-readability&quot; principle directly.</li>
+<li><strong>HTML comments</strong>: Invisible in rendered Markdown but readable by parsers. Too easy to accidentally break and provides no visual signal in raw file views.</li>
+</ul>
+<h2>Trade-offs</h2>
+<ul>
+<li><strong>Lost</strong>: Standardization. These tags are not recognized by any existing tooling outside this project. A developer unfamiliar with the convention must read the schema to understand them.</li>
+<li><strong>Gained</strong>: Zero dependencies for documentation itself. Files are readable in any Markdown viewer, on GitHub, and in any LLM context window. The system is extensible — new tags can be added to the schema without changing the file format.</li>
+</ul>
+<h2>Rationale</h2>
+<p>The tags need to be readable by a human skimming a file on GitHub and by an LLM processing context. They also need to provide a rendering hook for the web UI. Inline Markdown with lightweight tags is the only approach that satisfies all three without introducing external tooling or breaking standard Markdown rendering.</p>
+
+
+    </main>
+</body>
+</html>

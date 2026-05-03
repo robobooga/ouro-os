@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ourobor OS Wiki</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar a { display: block; color: #333; text-decoration: none; padding: 2px 0; font-size: 0.9em; }
+        .sidebar a:hover { color: #1976d2; }
+        .sidebar h4 { margin: 16px 0 4px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+        .sidebar .home-link { font-weight: bold; margin-bottom: 12px; font-size: 1em; }
+        main { flex: 1; padding: 24px 32px; max-width: 860px; }
+        .entity-header { font-size: 1.5em; font-weight: bold; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        .brief { font-style: italic; color: #555; }
+        .note, .warning { padding: 10px; border-left: 5px solid; margin: 10px 0; }
+        .note { border-color: #2196F3; background: #e3f2fd; }
+        .warning { border-color: #f44336; background: #ffebee; }
+        @media (max-width: 640px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid #ddd; }
+            main { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <a class="home-link" href="../index.html">Home</a>
+        
+        <h4>Wiki</h4>
+        
+        <a href="../index.html">index</a>
+        
+        
+        <h4>Entities</h4>
+        
+        <a href="../entities/bootstrap.html">bootstrap</a>
+        
+        <a href="../entities/builder.html">builder</a>
+        
+        <a href="../entities/capture.html">capture</a>
+        
+        <a href="../entities/package.html">package</a>
+        
+        
+        <h4>Decisions</h4>
+        
+        <a href="../decisions/ADR-001-ouro-as-distributable-skeleton.html">ADR 001 ouro as distributable skeleton</a>
+        
+        <a href="../decisions/ADR-002-wiki-as-dual-purpose.html">ADR 002 wiki as dual purpose</a>
+        
+        <a href="../decisions/ADR-003-doxygen-tags-in-markdown.html">ADR 003 doxygen tags in markdown</a>
+        
+        <a href="../decisions/ADR-004-webui-as-separate-concern.html">ADR 004 webui as separate concern</a>
+        
+        
+        <h4>Patterns</h4>
+        
+        <a href="../patterns/capture-synthesize-loop.html">capture synthesize loop</a>
+        
+        
+        <h4>Maps</h4>
+        
+        <a href="../maps/project-roadmap.html">project roadmap</a>
+        
+        <a href="../maps/system-architecture.html">system architecture</a>
+        
+        
+    </nav>
+    <main>
+        
+    <div class="entity-header">Entity: package</div>
+<p class="brief"><strong>Brief:</strong> Validates the ouro/ directory structure and creates a distributable zip archive for skill installation.</p>
+
+<h2>Overview</h2>
+<p><code>scripts/package.py</code> is the release tooling for Ourobor OS. It validates that all required files and directories are present in <code>ouro/</code>, then creates <code>dist/ouro-skill.zip</code> — the artifact consumed by <code>npx skills add robobooga/ourobor-os</code> and direct downloads.</p>
+<div class="note"><strong>Note:</strong> This script lives in root-level `scripts/`, not `ouro/scripts/`. It operates on the Ourobor OS project itself and is not part of the distributed skill package.</div>
+
+<h2>Functions</h2>
+<h3><code>validate_ouro_structure(ouro_dir)</code></h3>
+<p>Checks for required files and directories. Returns a list of missing items as strings. If the list is non-empty, <code>package()</code> aborts before creating the archive.</p>
+<p><strong>Required files</strong>: <code>README.md</code>, <code>AGENT_PROTOCOL.md</code>, <code>SKILL.md</code>, <code>scripts/bootstrap.py</code>, <code>scripts/capture.py</code>, <code>wiki/index.md</code>, <code>wiki/schema.md</code>, <code>wiki/capture-queue.md</code></p>
+<p><strong>Required directories</strong>: <code>scripts/</code>, <code>wiki/</code>, <code>wiki/entities/</code>, <code>wiki/decisions/</code>, <code>wiki/patterns/</code>, <code>wiki/maps/</code></p>
+<h3><code>package()</code></h3>
+<ol>
+<li>Validates <code>ouro/</code> structure — aborts on failure.</li>
+<li>Creates <code>dist/</code> directory if it doesn't exist.</li>
+<li>Removes the previous archive if one exists.</li>
+<li>Copies <code>ouro/</code> to a temporary directory, excluding <code>__pycache__</code>, <code>.pyc</code>, <code>.git</code>, <code>.DS_Store</code>.</li>
+<li>Zips the temp directory to <code>dist/ouro-skill.zip</code>.</li>
+<li>Reports the output path and file size.</li>
+</ol>
+<div class="note"><strong>Note:</strong> The exclusion filter in `shutil.copytree` targets filenames, not extensions — `.pyc` files are excluded by exact match, which may miss compiled files with different names. This is a minor gap.</div>
+
+<div class="warning"><strong>Warning:</strong> Wiki subdirectories in `ouro/wiki/` must contain only `.gitkeep` files. The packager does not filter wiki content — any documentation written there will be shipped to users. See [ADR-001](../decisions/ADR-001-ouro-as-distributable-skeleton.md).</div>
+
+<h2>CLI Usage</h2>
+<pre><code class="language-bash">python scripts/package.py
+# Output: dist/ouro-skill.zip
+</code></pre>
+
+
+    </main>
+</body>
+</html>
