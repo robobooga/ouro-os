@@ -7,6 +7,16 @@ Ourobor OS is a portable, compounding knowledge system ("External Brain"). It ma
 
 > **CRITICAL**: The `ouro/` directory is a **portable skill package** (the "system"). Keep it distinct from your **target project codebase**. When running commands, be aware of whether you are operating on the Ourobor OS system or your project files.
 
+## Project Brain
+
+The project's living documentation lives in `wiki/` (root level). This directory is both the internal docs for Ourobor OS and a reference example for users of the skill.
+
+> **Do not write project documentation into `ouro/wiki/`.** That directory is the clean distributable skeleton shipped to users. See `wiki/decisions/ADR-001-ouro-as-distributable-skeleton.md`.
+
+- **Wiki Index**: `wiki/index.md` — start here.
+- **Schema**: `wiki/schema.md` — Doxygen protocol and maintenance rules.
+- **Capture Queue**: `wiki/capture-queue.md` — active staging area.
+
 ## Wiki Protocol
 - **Persistence**: If it's not in the wiki, it doesn't exist.
 - **Compounding**: Every session grows the collective intelligence.
@@ -19,8 +29,15 @@ Ourobor OS is a portable, compounding knowledge system ("External Brain"). It ma
 - `@note`/`@warning`: Dev context/alerts.
 - `@param`/`@return`: Function documentation.
 
+## Workflow For This Project
+1. **Monitor**: Check `wiki/capture-queue.md`.
+2. **Synthesize**: Use `python ouro/scripts/capture.py --pop` to process captures.
+3. **Document**: Transform entries into `wiki/entities/`, `wiki/patterns/`, or `wiki/decisions/`.
+4. **Index**: Update `wiki/index.md`.
+5. **Clean**: Remove synthesized entries from queue.
+
 ## Workflow For Skill Package
-1. **Monitor**: Check `ouro/wiki/capture-queue.md`.
+1. **Monitor**: Check `ouro/wiki/capture-queue.md` (in the target project after install).
 2. **Synthesize**: Use `python ouro/scripts/capture.py --pop` to process captures.
 3. **Document**: Transform entries into `ouro/wiki/entities/` or `patterns/`.
 4. **Index**: Update `ouro/wiki/index.md`.
