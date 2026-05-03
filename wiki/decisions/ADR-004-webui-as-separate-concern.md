@@ -26,4 +26,4 @@ The web UI lives in `ouro-webui/` and is excluded from the distributed package. 
 
 The wiki's primary consumer is an LLM agent reading files in a coding session, not a human browsing in a browser. The web UI is a nice-to-have for human navigation and is not on the critical path for the skill's core value proposition.
 
-@note The web UI has known issues that need to be resolved before it can be considered stable. See [builder.py entity](../entities/builder.md) for the specific bugs.
+@note The web UI is stable. All previously documented issues have been resolved. See [builder.py entity](../entities/builder.md) for current status.
