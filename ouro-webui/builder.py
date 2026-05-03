@@ -64,7 +64,7 @@ def build_nav_tree(wiki_dir):
 def process_file(wiki_path, nav_tree, root_prefix):
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
     template = env.get_template('page.html')
-    markdown = mistune.create_markdown(plugins=['table', 'strikethrough'])
+    markdown = mistune.create_markdown(escape=False, plugins=['table', 'strikethrough'])
 
     with open(wiki_path, 'r', encoding='utf-8') as f:
         content = f.read()
