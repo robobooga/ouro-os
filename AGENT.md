@@ -1,6 +1,6 @@
 # AGENT.md
 
-Project documentation for Ourobor OS.
+Project overview and rules for Ourobor OS.
 
 ## Overview
 Ourobor OS is a portable, compounding knowledge system ("External Brain"). It maps project documentation to a machine-readable wiki contained in the `ouro/` directory.
