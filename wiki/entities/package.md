@@ -3,7 +3,7 @@
 
 ## Overview
 
-`scripts/package.py` is the release tooling for Ourobor OS. It validates that all required files and directories are present in `ouro/`, then creates `dist/ouro-skill.zip` — the artifact consumed by `npx skills add robobooga/ourobor-os` and direct downloads.
+`scripts/package.py` is the release tooling for Ourobor OS. It validates that all required files and directories are present in `ouro/`, then creates `dist/ouro-skill.zip` for manual distribution.
 
 @note This script lives in root-level `scripts/`, not `ouro/scripts/`. It operates on the Ourobor OS project itself and is not part of the distributed skill package.
 
