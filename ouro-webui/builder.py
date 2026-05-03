@@ -71,6 +71,11 @@ def process_file(wiki_path, nav_tree, root_prefix):
 
     processed = parse_doxygen_tags(content)
     html_content = markdown(processed)
+    html_content = re.sub(
+        r'href="([^"]*?)\.md(#[^"]*?)?"',
+        lambda m: f'href="{m.group(1)}.html{m.group(2) or ""}"',
+        html_content,
+    )
     return template.render(content=html_content, nav_tree=nav_tree, root_prefix=root_prefix)
 
 
